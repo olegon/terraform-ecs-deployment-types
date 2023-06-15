@@ -23,6 +23,7 @@ env:
   ECS_CLUSTER: my-ecs-cluster
   ECS_TASK_DEFINITION: "./task-definition.json"
   CONTAINER_NAME: my-app
+  CONTAINER_PORT: 5000
   CODEDEPLOY_APPLICATION: my-app-codedeploy
   CODEDEPLOY_DEPLOYMENT_GROUP: my-app-codedeploy
 
@@ -87,6 +88,12 @@ jobs:
           TASK_DEFINITION_PATH: ${{ steps.task-def.outputs.task-definition }}
         run: |
           cat "$TASK_DEFINITION_PATH"
+
+      - name: Create appspec file
+        id: create-appspec-file
+        run: |
+          cat '{ "version": 0.0, "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ] }' | envsubst > appspec.json
+          cat appspec.json
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
