@@ -7,4 +7,4 @@ app.get('/', (_, res) => res.send('Hello!'));
 
 app.get('/version', (_, res) => res.send(config.version));
 
-app.listen(8080);
+app.listen(5000);
