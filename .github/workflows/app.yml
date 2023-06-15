@@ -94,8 +94,8 @@ jobs:
           TASK_DEFINITION_PATH: ${{ steps.task-def.outputs.task-definition }}
         run: |
           export AWS_TASK_DEFINITION_ARN=$(cat "$TASK_DEFINITION_PATH" | jq --raw-output '.taskDefinitionArn')
-          envsubst < appspec.yaml.template > appspec.yaml
-          cat appspec.yaml
+          envsubst < appspec.json.template > appspec.json
+          cat appspec.json
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
