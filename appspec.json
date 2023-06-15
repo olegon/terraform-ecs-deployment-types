@@ -8,7 +8,9 @@
             "Type": "AWS::ECS::Service",
             "Properties":
               {
-                "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE"
+                "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE",
+                "LoadBalancerInfo":
+                  { "ContainerName": "my-app", "ContainerPort": 5000 }
               }
           }
       }
