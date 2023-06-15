@@ -1,10 +1,10 @@
 import express from 'express';
-import { version }  from './package.json'
+import config from './package.json' assert { type: "json" };
 
 const app = express();
 
 app.get('/', (_, res) => res.send('Hello!'));
 
-app.get('/version', (_, res) => res.send(version));
+app.get('/version', (_, res) => res.send(config.version));
 
-app.listen(8080);
+app.listen(80);
