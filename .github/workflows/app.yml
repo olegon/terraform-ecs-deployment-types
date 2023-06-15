@@ -82,7 +82,7 @@ jobs:
           image: ${{ steps.build-image.outputs.image }}
 
       - name: Print task definition
-        id: get-task-definition
+        id: print-task-definition
         env:
           TASK_DEFINITION_CONTENT: ${{ steps.task-def.outputs.task-definition }}
         run: |
