@@ -84,6 +84,15 @@ jobs:
         run: |
           cat "$TASK_DEFINITION_PATH"
 
+      - name: Render CodeDeploy appspec.yaml file
+        id: render-codedeploy-appspec-file
+        env:
+          TASK_DEFINITION_PATH: ${{ steps.task-def.outputs.task-definition }}
+        run: |
+          export AWS_TASK_DEFINITION_ARN=$(cat "TASK_DEFINITION_PATH" | jq '.taskDefinitionArn')
+          envsubst < appspec.yaml.template > appspec.yaml
+          cat appspec.yaml
+
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
