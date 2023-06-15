@@ -89,7 +89,7 @@ jobs:
         env:
           TASK_DEFINITION_PATH: ${{ steps.task-def.outputs.task-definition }}
         run: |
-          export AWS_TASK_DEFINITION_ARN=$(cat "TASK_DEFINITION_PATH" | jq '.taskDefinitionArn')
+          export AWS_TASK_DEFINITION_ARN=$(cat "$TASK_DEFINITION_PATH" | jq '.taskDefinitionArn')
           envsubst < appspec.yaml.template > appspec.yaml
           cat appspec.yaml
 
