@@ -9,12 +9,11 @@ variable "app_log_group_name" {
 }
 
 variable "app_docker_image" {
-  type = string
-  # default = "nginx:1-alpine"
-  default = "httpd:2-alpine"
+  type    = string
+  default = "nginx:latest"
 }
 
 variable "app_docker_port" {
   type    = number
-  default = 80
+  default = 5000
 }

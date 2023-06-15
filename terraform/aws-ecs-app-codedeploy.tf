@@ -16,11 +16,6 @@ resource "aws_iam_role" "codedeploy" {
   assume_role_policy = data.aws_iam_policy_document.codedeploy_trust.json
 }
 
-# resource "aws_iam_role_policy_attachment" "aws_codedeploy_role" {
-#   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
-#   role       = aws_iam_role.codedeploy.name
-# }
-
 resource "aws_iam_role_policy_attachment" "aws_codedeploy_role_for_ecs" {
   policy_arn = "arn:aws:iam::aws:policy/AWSCodeDeployRoleForECS"
   role       = aws_iam_role.codedeploy.name

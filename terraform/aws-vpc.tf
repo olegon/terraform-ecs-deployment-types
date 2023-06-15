@@ -37,9 +37,18 @@ resource "aws_security_group" "lb_ingress" {
   vpc_id      = data.aws_vpc.default.id
 
   ingress {
-    description      = "http"
+    description      = "http (prod)"
     from_port        = 80
     to_port          = 80
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  ingress {
+    description      = "http (test)"
+    from_port        = 8080
+    to_port          = 8080
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]

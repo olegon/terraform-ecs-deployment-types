@@ -66,3 +66,13 @@ resource "aws_ecs_service" "app" {
     ]
   }
 }
+
+resource "aws_ecr_repository" "app" {
+  name                 = "my-app"
+  image_tag_mutability = "MUTABLE" # "IMMUTABLE"
+  force_delete         = true
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
