@@ -10,9 +10,9 @@
               {
                 "TaskDefinition": "${AWS_TASK_DEFINITION_ARN}",
                 "LoadBalancerInfo":
-                  { "ContainerName": "my-app", "ContainerPort": 80 },
-              },
-          },
-      },
-    ],
+                  { "ContainerName": "my-app", "ContainerPort": 8080 },
+              }
+          }
+      }
+    ]
 }
