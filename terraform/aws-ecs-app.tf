@@ -24,11 +24,20 @@ resource "aws_ecs_task_definition" "app" {
       portMappings = [
         {
           name          = "http"
-          appProtocol   = "http"
           containerPort = var.app_docker_port
           protocol      = "tcp"
         }
-      ]
+      ],
+      healthCheck = {
+        command = [
+          "CMD-SHELL",
+          "curl --fail http://localhost:${var.app_docker_port}"
+        ],
+        interval    = 5,
+        timeout     = 2,
+        retries     = 3,
+        startPeriod = 5
+      }
     }
   ])
 }
