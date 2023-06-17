@@ -14,7 +14,7 @@ data "aws_security_group" "lb_ingress" {
 }
 
 resource "aws_security_group" "app" {
-  name        = "my-app-sg"
+  name        = format("%s-sg", var.app_name)
   description = "allows app traffic"
   vpc_id      = data.aws_vpc.default.id
 

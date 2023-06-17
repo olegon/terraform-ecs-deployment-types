@@ -1,5 +1,5 @@
 resource "aws_ecs_task_definition" "app" {
-  family                   = "my-app"
+  family                   = var.app_name
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 256
@@ -7,16 +7,16 @@ resource "aws_ecs_task_definition" "app" {
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   container_definitions = jsonencode([
     {
-      name              = "my-app"
+      name              = var.app_name
       image             = var.app_docker_image
       cpu               = 256
       memoryReservation = 512
       memory            = 512
       essential         = true
       logConfiguration = {
-        logDriver = "awslogs",
+        logDriver = "awslogs"
         options = {
-          awslogs-group         = var.app_log_group_name
+          awslogs-group         = aws_cloudwatch_log_group.app.name
           awslogs-region        = data.aws_region.current.name
           awslogs-stream-prefix = "logs"
         }
@@ -27,15 +27,19 @@ resource "aws_ecs_task_definition" "app" {
           containerPort = var.app_docker_port
           protocol      = "tcp"
         }
-      ],
+      ]
+      environment = [
+        { name = "PREFIX", value = var.app_name },
+        { name = "PORT", value = var.app_docker_port }
+      ]
       healthCheck = {
         command = [
           "CMD-SHELL",
-          "curl --fail http://localhost:${var.app_docker_port}"
-        ],
-        interval    = 5,
-        timeout     = 2,
-        retries     = 3,
+          "curl --fail http://localhost:${var.app_docker_port}/v1/health"
+        ]
+        interval    = 5
+        timeout     = 2
+        retries     = 3
         startPeriod = 5
       }
     }
@@ -46,11 +50,14 @@ resource "aws_ecs_service" "app" {
   cluster         = data.aws_ecs_cluster.this.arn
   desired_count   = 1
   launch_type     = "FARGATE"
-  name            = "my-app"
+  name            = var.app_name
   task_definition = aws_ecs_task_definition.app.arn
 
+  deployment_minimum_healthy_percent = 100
+  deployment_maximum_percent         = 200
+
   deployment_controller {
-    type = "CODE_DEPLOY"
+    type = var.deployment_type == "Blue Green" ? "CodeDeploy" : "ECS"
   }
 
   network_configuration {
@@ -63,7 +70,7 @@ resource "aws_ecs_service" "app" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.lb_ingress_app_blue.arn
-    container_name   = "my-app"
+    container_name   = var.app_name
     container_port   = var.app_docker_port
   }
 
@@ -77,8 +84,8 @@ resource "aws_ecs_service" "app" {
 }
 
 resource "aws_ecr_repository" "app" {
-  name                 = "my-app"
-  image_tag_mutability = "MUTABLE" # "IMMUTABLE"
+  name                 = var.app_name
+  image_tag_mutability = "MUTABLE"
   force_delete         = true
 
   image_scanning_configuration {

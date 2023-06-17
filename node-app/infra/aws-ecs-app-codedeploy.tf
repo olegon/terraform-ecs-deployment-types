@@ -12,7 +12,7 @@ data "aws_iam_policy_document" "codedeploy_trust" {
 }
 
 resource "aws_iam_role" "codedeploy" {
-  name               = "my-codedeploy-role"
+  name               = format("%s-codedeploy-role", var.app_name)
   assume_role_policy = data.aws_iam_policy_document.codedeploy_trust.json
 }
 
@@ -23,13 +23,13 @@ resource "aws_iam_role_policy_attachment" "aws_codedeploy_role_for_ecs" {
 
 resource "aws_codedeploy_app" "app" {
   compute_platform = "ECS"
-  name             = "my-app-codedeploy"
+  name             = format("%s-codedeploy", var.app_name)
 }
 
 resource "aws_codedeploy_deployment_group" "app" {
   app_name               = aws_codedeploy_app.app.name
   deployment_config_name = "CodeDeployDefault.ECSAllAtOnce"
-  deployment_group_name  = "my-app-codedeploy"
+  deployment_group_name  = format("%s-codedeploy", var.app_name)
   service_role_arn       = aws_iam_role.codedeploy.arn
 
   auto_rollback_configuration {

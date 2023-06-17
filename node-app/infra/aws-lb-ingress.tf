@@ -20,7 +20,7 @@ resource "aws_lb_listener_rule" "lb_ingress_http_prod_app" {
 
   condition {
     path_pattern {
-      values = ["/app/*"]
+      values = [format("/%s/*", var.app_name)]
     }
   }
 
@@ -61,7 +61,7 @@ resource "aws_lb_listener_rule" "lb_ingress_http_test_app" {
 
   condition {
     path_pattern {
-      values = ["/app/*"]
+      values = [format("/%s/*", var.app_name)]
     }
   }
 

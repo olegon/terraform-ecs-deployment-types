@@ -6,17 +6,17 @@ on:
       - main
 
 env:
-  APP_PATH: app/src
+  APP_PATH: node-app/src
   AWS_REGION: us-east-1
-  CODEDEPLOY_APPLICATION_NAME: my-app-codedeploy
-  CODEDEPLOY_DEPLOYMENT_GROUP_NAME: my-app-codedeploy
-  CONTAINER_NAME: my-app
+  CODEDEPLOY_APPLICATION_NAME: node-app-codedeploy
+  CODEDEPLOY_DEPLOYMENT_GROUP_NAME: node-app-codedeploy
+  CONTAINER_NAME: node-app
   CONTAINER_PORT: 5000
-  ECR_REPOSITORY_NAME: my-app
+  ECR_REPOSITORY_NAME: node-app
   ECS_CLUSTER_NAME: my-ecs-cluster
-  ECS_SERVICE_NAME: my-app
+  ECS_SERVICE_NAME: node-app
   ECS_TASK_DEFINITION_FILE: task-definition.json
-  TERRAFORM_APP_PATH: app/infra
+  TERRAFORM_APP_PATH: node-app/infra
   TERRAFORM_PLATFORM_PATH: platform
 
 jobs:
@@ -141,8 +141,6 @@ jobs:
           cd "$APP_PATH"
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG
-          docker tag $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY_NAME:latest
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY_NAME:latest
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: Get task definition
