@@ -56,11 +56,40 @@ jobs:
           cd app/infra
           terraform plan -no-color
 
+  terraform-apply:
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+    steps:
+      # - name: Github -> Checkout
+      #   uses: actions/checkout@v3
+
+      # - name: AWS -> Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v2
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: ${{ env.AWS_REGION }}
+
+      - name: Terraform -> Setup
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Terraform -> Init
+        run: |
+          cd app/infra
+          terraform init
+
+      - name: Terraform -> Plan
+        id: plan
+        run: |
+          cd app/infra
+          terraform plan -no-color
+
   build:
     name: Build image
     needs:
       - terraform-plan
-    environment: production
     runs-on: ubuntu-latest
     steps:
       - name: Github -> Checkout
