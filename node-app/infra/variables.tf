@@ -25,7 +25,7 @@ variable "ecs_cluster_name" {
 
 variable "deployment_type" {
   type    = string
-  default = "Blue Green"
+  default = "Rolling Update"
   validation {
     condition     = contains(["Blue Green", "Rolling Update"], var.deployment_type)
     error_message = format("Valid deployment_type values are: %s", join(", ", ["Blue Green", "Rolling Update"]))
