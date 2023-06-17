@@ -8,13 +8,13 @@ on:
 env:
   APP_PATH: app/src
   AWS_REGION: us-east-1
-  CODEDEPLOY_APPLICATION: my-app-codedeploy
-  CODEDEPLOY_DEPLOYMENT_GROUP: my-app-codedeploy
+  CODEDEPLOY_APPLICATION_NAME: my-app-codedeploy
+  CODEDEPLOY_DEPLOYMENT_GROUP_NAME: my-app-codedeploy
   CONTAINER_NAME: my-app
   CONTAINER_PORT: 5000
-  ECR_REPOSITORY: my-app
-  ECS_CLUSTER: my-ecs-cluster
-  ECS_SERVICE: my-app
+  ECR_REPOSITORY_NAME: my-app
+  ECS_CLUSTER_NAME: my-ecs-cluster
+  ECS_SERVICE_NAME: my-app
   ECS_TASK_DEFINITION_FILE: task-definition.json
   TERRAFORM_APP_PATH: app/infra
   TERRAFORM_PLATFORM_PATH: platform
@@ -139,11 +139,11 @@ jobs:
           # push it to ECR so that it can
           # be deployed to ECS.
           cd "$APP_PATH"
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY_NAME:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_NAME:latest
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: Get task definition
         id: get-task-definition
@@ -152,7 +152,7 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           aws ecs describe-task-definition \
-            --task-definition "$ECS_SERVICE" \
+            --task-definition "$ECS_SERVICE_NAME" \
             --query taskDefinition > "$ECS_TASK_DEFINITION_FILE"
 
       - name: Fill in the new image ID in the Amazon ECS task definition
@@ -180,9 +180,9 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
+          service: ${{ env.ECS_SERVICE_NAME }}
+          cluster: ${{ env.ECS_CLUSTER_NAME }}
           wait-for-service-stability: true
           codedeploy-appspec: appspec.json
-          codedeploy-application: ${{ env.CODEDEPLOY_APPLICATION }}
-          codedeploy-deployment-group: ${{ env.CODEDEPLOY_DEPLOYMENT_GROUP }}
+          codedeploy-application: ${{ env.CODEDEPLOY_APPLICATION_NAME }}
+          codedeploy-deployment-group: ${{ env.CODEDEPLOY_DEPLOYMENT_GROUP_NAME }}
