@@ -13,8 +13,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'app/**'
 
 env:
   AWS_REGION: us-east-1
@@ -51,13 +49,13 @@ jobs:
 
       - name: Terraform -> Init
         run: |
-          cp app/infra
+          cd app/infra
           terraform init
 
       - name: Terraform -> Plan
         id: plan
         run: |
-          cp app/infra
+          cd app/infra
           terraform plan -no-color
 
       - run: echo ${{ steps.plan.outputs.stdout }}
