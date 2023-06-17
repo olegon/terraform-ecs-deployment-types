@@ -37,71 +37,93 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Configure AWS credentials
+      - name: AWS -> Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to ECS.
-          cd ./app
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
-
-      - name: Get task definition
-        id: get-task-definition
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          aws ecs describe-task-definition \
-            --task-definition "$ECS_SERVICE" \
-            --query taskDefinition > "$ECS_TASK_DEFINITION"
-
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
+      - name: Terraform -> Setup
+        uses: hashicorp/setup-terraform@v2
         with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
+          terraform_version: 1.5.0
 
-      - name: Print task definition
-        id: print-task-definition
-        env:
-          TASK_DEFINITION_PATH: ${{ steps.task-def.outputs.task-definition }}
+      - name: Terraform -> Init
         run: |
-          cat "$TASK_DEFINITION_PATH"
+          cp app/infra
+          terraform init
 
-      - name: Create appspec file
-        id: create-appspec-file
+      - name: Terraform -> Plan
+        id: plan
         run: |
-          echo '{ "version": 0.0, "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ] }' | envsubst > appspec.json
-          cat appspec.json
+          cp app/infra
+          terraform plan -no-color
 
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
-          codedeploy-appspec: appspec.json
-          codedeploy-application: ${{ env.CODEDEPLOY_APPLICATION }}
-          codedeploy-deployment-group: ${{ env.CODEDEPLOY_DEPLOYMENT_GROUP }}
+      - run: echo ${{ steps.plan.outputs.stdout }}
+
+      - run: echo ${{ steps.plan.outputs.stderr }}
+
+      - run: echo ${{ steps.plan.outputs.exitcode }}
+
+      # - name: Login to Amazon ECR
+      #   id: login-ecr
+      #   uses: aws-actions/amazon-ecr-login@v1
+
+      # - name: Build, tag, and push image to Amazon ECR
+      #   id: build-image
+      #   env:
+      #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      #     IMAGE_TAG: ${{ github.sha }}
+      #   run: |
+      #     # Build a docker container and
+      #     # push it to ECR so that it can
+      #     # be deployed to ECS.
+      #     cd ./app
+      #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+      #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      #     docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+      #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+      #     echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      # - name: Get task definition
+      #   id: get-task-definition
+      #   env:
+      #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      #     IMAGE_TAG: ${{ github.sha }}
+      #   run: |
+      #     aws ecs describe-task-definition \
+      #       --task-definition "$ECS_SERVICE" \
+      #       --query taskDefinition > "$ECS_TASK_DEFINITION"
+
+      # - name: Fill in the new image ID in the Amazon ECS task definition
+      #   id: task-def
+      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
+      #   with:
+      #     task-definition: ${{ env.ECS_TASK_DEFINITION }}
+      #     container-name: ${{ env.CONTAINER_NAME }}
+      #     image: ${{ steps.build-image.outputs.image }}
+
+      # - name: Print task definition
+      #   id: print-task-definition
+      #   env:
+      #     TASK_DEFINITION_PATH: ${{ steps.task-def.outputs.task-definition }}
+      #   run: |
+      #     cat "$TASK_DEFINITION_PATH"
+
+      # - name: Create appspec file
+      #   id: create-appspec-file
+      #   run: |
+      #     echo '{ "version": 0.0, "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ] }' | envsubst > appspec.json
+      #     cat appspec.json
+
+      # - name: Deploy Amazon ECS task definition
+      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      #   with:
+      #     task-definition: ${{ steps.task-def.outputs.task-definition }}
+      #     service: ${{ env.ECS_SERVICE }}
+      #     cluster: ${{ env.ECS_CLUSTER }}
+      #     wait-for-service-stability: true
+      #     codedeploy-appspec: appspec.json
+      #     codedeploy-application: ${{ env.CODEDEPLOY_APPLICATION }}
+      #     codedeploy-deployment-group: ${{ env.CODEDEPLOY_DEPLOYMENT_GROUP }}

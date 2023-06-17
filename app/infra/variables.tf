@@ -17,3 +17,8 @@ variable "app_docker_port" {
   type    = number
   default = 5000
 }
+
+variable "ecs_cluster_name" {
+  type    = string
+  default = "my-ecs-cluster"
+}

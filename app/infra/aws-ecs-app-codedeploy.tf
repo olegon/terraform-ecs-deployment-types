@@ -54,18 +54,18 @@ resource "aws_codedeploy_deployment_group" "app" {
   }
 
   ecs_service {
-    cluster_name = aws_ecs_cluster.this.name
+    cluster_name = var.ecs_cluster_name
     service_name = aws_ecs_service.app.name
   }
 
   load_balancer_info {
     target_group_pair_info {
       prod_traffic_route {
-        listener_arns = [aws_lb_listener.lb_ingress_http_prod.arn]
+        listener_arns = [data.aws_lb_listener.lb_ingress_http_prod.arn]
       }
 
       test_traffic_route {
-        listener_arns = [aws_lb_listener.lb_ingress_http_test.arn]
+        listener_arns = [data.aws_lb_listener.lb_ingress_http_test.arn]
       }
 
       target_group {

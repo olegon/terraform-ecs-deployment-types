@@ -9,28 +9,6 @@ data "aws_subnets" "default" {
   }
 }
 
-resource "aws_security_group" "app" {
-  name        = "my-app-sg"
-  description = "allows app traffic"
-  vpc_id      = data.aws_vpc.default.id
-
-  ingress {
-    description     = "app port"
-    from_port       = var.app_docker_port
-    to_port         = var.app_docker_port
-    protocol        = "tcp"
-    security_groups = [aws_security_group.lb_ingress.id]
-  }
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-}
-
 resource "aws_security_group" "lb_ingress" {
   name        = "my-lb-ingress-sg"
   description = "allows lb-ingress traffic"

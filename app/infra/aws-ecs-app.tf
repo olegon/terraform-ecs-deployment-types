@@ -43,7 +43,7 @@ resource "aws_ecs_task_definition" "app" {
 }
 
 resource "aws_ecs_service" "app" {
-  cluster         = aws_ecs_cluster.this.arn
+  cluster         = data.aws_ecs_cluster.this.arn
   desired_count   = 1
   launch_type     = "FARGATE"
   name            = "my-app"
