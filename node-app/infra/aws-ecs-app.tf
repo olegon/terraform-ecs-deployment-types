@@ -48,13 +48,13 @@ resource "aws_ecs_task_definition" "app" {
 
 resource "aws_ecs_service" "app" {
   cluster         = data.aws_ecs_cluster.this.arn
-  desired_count   = 1
+  desired_count   = 5
   launch_type     = "FARGATE"
   name            = var.app_name
   task_definition = aws_ecs_task_definition.app.arn
 
   deployment_minimum_healthy_percent = 100
-  deployment_maximum_percent         = 200
+  deployment_maximum_percent         = 150
 
   deployment_controller {
     # Changing it will recreate the ECS Service
