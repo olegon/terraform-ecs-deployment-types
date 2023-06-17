@@ -35,7 +35,7 @@ resource "aws_ecs_task_definition" "app" {
       healthCheck = {
         command = [
           "CMD-SHELL",
-          "curl --fail http://localhost:${var.app_docker_port}/v1/health"
+          "curl --fail http://localhost:${var.app_docker_port}/${var.app_name}/v1/health"
         ]
         interval    = 5
         timeout     = 2
