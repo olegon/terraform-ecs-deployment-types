@@ -86,7 +86,7 @@ resource "aws_ecs_service" "app" {
 }
 
 resource "aws_ecr_repository" "app" {
-  name                 = var.app_name
+  name = var.app_name
   # IMMUTABLE is a better option because it making rollback and troubleshooting simpler! 
   image_tag_mutability = "MUTABLE"
   force_delete         = true

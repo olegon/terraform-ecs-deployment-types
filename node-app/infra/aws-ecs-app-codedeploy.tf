@@ -22,12 +22,16 @@ resource "aws_iam_role_policy_attachment" "aws_codedeploy_role_for_ecs" {
 }
 
 resource "aws_codedeploy_app" "app" {
+  count = var.deployment_type == "Blue Green" ? 1 : 0
+
   compute_platform = "ECS"
   name             = format("%s-codedeploy", var.app_name)
 }
 
 resource "aws_codedeploy_deployment_group" "app" {
-  app_name               = aws_codedeploy_app.app.name
+  count = var.deployment_type == "Blue Green" ? 1 : 0
+
+  app_name               = aws_codedeploy_app.app[0].name
   deployment_config_name = var.deployment_bluegreen_strategy
   deployment_group_name  = format("%s-codedeploy", var.app_name)
   service_role_arn       = aws_iam_role.codedeploy.arn

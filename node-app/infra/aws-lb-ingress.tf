@@ -42,7 +42,7 @@ resource "aws_lb_target_group" "lb_ingress_app_blue" {
 
   health_check {
     enabled = true
-    path = format("/%s/v1/health", var.app_name)
+    path    = format("/%s/v1/health", var.app_name)
     matcher = "200-299"
   }
 
@@ -91,7 +91,7 @@ resource "aws_lb_target_group" "lb_ingress_app_green" {
 
   health_check {
     enabled = true
-    path = format("/%s/v1/health", var.app_name)
+    path    = format("/%s/v1/health", var.app_name)
     matcher = "200-299"
   }
 
