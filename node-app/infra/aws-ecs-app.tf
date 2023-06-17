@@ -57,6 +57,7 @@ resource "aws_ecs_service" "app" {
   deployment_maximum_percent         = 200
 
   deployment_controller {
+    # Changing it will recreate the ECS Service
     type = var.deployment_type == "Blue Green" ? "CODE_DEPLOY" : "ECS"
   }
 
@@ -74,6 +75,7 @@ resource "aws_ecs_service" "app" {
     container_port   = var.app_docker_port
   }
 
+  # When Blue Green is active, Code Deploy will change LB as ECS Task Definition on our behalf.
   lifecycle {
     ignore_changes = [
       desired_count,
@@ -85,6 +87,7 @@ resource "aws_ecs_service" "app" {
 
 resource "aws_ecr_repository" "app" {
   name                 = var.app_name
+  # IMMUTABLE is a better option because it making rollback and troubleshooting simpler! 
   image_tag_mutability = "MUTABLE"
   force_delete         = true
 

@@ -11,7 +11,7 @@ router.get('/v1/health', (_, res) => res.send('Healthy!'));
 router.get('/v1/version', (_, res) => res.send(config.version));
 
 const app = express();
-// Adding it because ALB routes on /app path prefix
+// Adding it because ALB cannot rewrite the PREFIX used to route traffic...
 app.use(PREFIX, router);
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}.`));
