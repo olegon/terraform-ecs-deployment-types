@@ -5,7 +5,7 @@ variable "aws_region" {
 
 variable "app_name" {
   type    = string
-  default = "node-app-blue-green"
+  default = "node-app"
 }
 
 variable "app_docker_image" {
