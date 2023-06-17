@@ -28,7 +28,7 @@ resource "aws_codedeploy_app" "app" {
 
 resource "aws_codedeploy_deployment_group" "app" {
   app_name               = aws_codedeploy_app.app.name
-  deployment_config_name = "CodeDeployDefault.ECSAllAtOnce"
+  deployment_config_name = var.deployment_bluegreen_strategy
   deployment_group_name  = format("%s-codedeploy", var.app_name)
   service_role_arn       = aws_iam_role.codedeploy.arn
 
