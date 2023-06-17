@@ -30,7 +30,7 @@ resource "aws_ecs_task_definition" "app" {
       ]
       environment = [
         { name = "PREFIX", value = var.app_name },
-        { name = "PORT", value = var.app_docker_port }
+        { name = "PORT", value = tostring(var.app_docker_port) }
       ]
       healthCheck = {
         command = [
@@ -57,7 +57,7 @@ resource "aws_ecs_service" "app" {
   deployment_maximum_percent         = 200
 
   deployment_controller {
-    type = var.deployment_type == "Blue Green" ? "CodeDeploy" : "ECS"
+    type = var.deployment_type == "Blue Green" ? "CODE_DEPLOY" : "ECS"
   }
 
   network_configuration {
