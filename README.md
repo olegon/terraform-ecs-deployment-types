@@ -44,3 +44,5 @@ I've created a simple application and a simple platform, so you will find these 
 - **platform**: has Terraform code that deploys ECS Cluster, ELB etc. It will deploy the platform where app wil run.
 - **node-app**: has a `src` directory with the simple Node application and `infra` directory with Terraform code that deploys ECS Service, Code Deploy etc.
 - **.github**: has Github Actions code that deploys all these items to an AWS account;
+
+I recommend to see every file because I added comments that shows the mistakes I've made.
