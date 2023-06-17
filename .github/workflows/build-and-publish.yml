@@ -111,6 +111,7 @@ jobs:
 
   app-build:
     name: App - Build and publish
+    environment: production
     needs:
       - app-terraform
     runs-on: ubuntu-latest
