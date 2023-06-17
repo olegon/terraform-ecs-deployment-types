@@ -38,6 +38,12 @@ resource "aws_lb_target_group" "lb_ingress_app_blue" {
   target_type = "ip"
   vpc_id      = data.aws_vpc.default.id
 
+  health_check {
+    enabled = true
+    path = format("/%s/v1/health", var.app_name)
+    matcher = "200-299"
+  }
+
   deregistration_delay = 60
 }
 
@@ -78,6 +84,12 @@ resource "aws_lb_target_group" "lb_ingress_app_green" {
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = data.aws_vpc.default.id
+
+  health_check {
+    enabled = true
+    path = format("/%s/v1/health", var.app_name)
+    matcher = "200-299"
+  }
 
   deregistration_delay = 60
 }
