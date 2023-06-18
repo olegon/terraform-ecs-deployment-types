@@ -30,6 +30,9 @@ If minimumHealthyPercent is 50%, maximumPercent is 150% and there are 5 instance
 |           0           |              1               |           5           |             0              |
 |           0           |              0               |           5           |             0              |
 
+
+> If minimumHealthyPercent and maximumPercent combinations makes deployment impossible, it will throw an error.
+
 ## Blue Green
 
 Code Deploy shifts the traffic between Blue and Green ELB Target Groups. Wow this traffic occurs can be controller with these configurations:

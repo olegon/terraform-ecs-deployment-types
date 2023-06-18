@@ -54,7 +54,7 @@ resource "aws_ecs_service" "app" {
   task_definition = aws_ecs_task_definition.app.arn
 
   deployment_minimum_healthy_percent = 100
-  deployment_maximum_percent         = 150
+  deployment_maximum_percent         = 200
 
   deployment_controller {
     # Changing it will recreate the ECS Service
@@ -75,7 +75,7 @@ resource "aws_ecs_service" "app" {
     container_port   = var.app_docker_port
   }
 
-  # When Blue Green is active, Code Deploy will change LB as ECS Task Definition on our behalf.
+  # When Blue Green is active, Code Deploy will change LB as ECS Task Definition for us.
   lifecycle {
     ignore_changes = [
       desired_count,
