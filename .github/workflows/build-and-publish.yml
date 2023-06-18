@@ -21,8 +21,8 @@ env:
 
 jobs:
   # Platform should reside in another repository.
-  platform-terraform:
-    name: Platform - Terraform
+  platform-terraform-plan:
+    name: Platform - Terraform plan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -55,65 +55,112 @@ jobs:
           cd "$TERRAFORM_PLATFORM_PATH"
           terraform plan -no-color
 
-      - name: Manual approval
-        run: |
-          echo "Not available on private repos... :("
 
-      - name: Terraform apply
-        run: |
-          cd "$TERRAFORM_PLATFORM_PATH"
-          terraform apply -no-color -auto-approve
-
-  app-terraform:
-    name: App - Terraform
+  platform-terraform-apply:
+    name: Platform - Terraform apply
     needs:
-      - platform-terraform
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Terraform setup
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0
-
-      - name: Terraform init
-        run: |
-          cd "$TERRAFORM_APP_PATH"
-          terraform init
-
-      - name: Terraform validate
-        run: |
-          cd "$TERRAFORM_APP_PATH"
-          terraform validate -no-color
-
-      - name: Terraform plan
-        run: |
-          cd "$TERRAFORM_APP_PATH"
-          terraform plan -no-color
-
-      - name: Manual approval
-        run: |
-          echo "Not available on private repos... :("
-
-      - name: Terraform apply
-        run: |
-          cd "$TERRAFORM_APP_PATH"
-          terraform apply -no-color -auto-approve
-
-  app-build:
-    name: App - Build and publish
+      - platform-terraform-plan
     environment: production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Terraform setup
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Terraform init
+        run: |
+          cd "$TERRAFORM_PLATFORM_PATH"
+          terraform init
+
+      - name: Terraform apply
+        run: |
+          cd "$TERRAFORM_PLATFORM_PATH"
+          terraform apply -no-color -auto-approve
+
+  app-terraform-plan:
+    name: App - Terraform plan
     needs:
-      - app-terraform
+      - platform-terraform-apply
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Terraform setup
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Terraform init
+        run: |
+          cd "$TERRAFORM_APP_PATH"
+          terraform init
+
+      - name: Terraform validate
+        run: |
+          cd "$TERRAFORM_APP_PATH"
+          terraform validate -no-color
+
+      - name: Terraform plan
+        run: |
+          cd "$TERRAFORM_APP_PATH"
+          terraform plan -no-color
+
+  app-terraform-apply:
+    name: App - Terraform apply
+    needs:
+      - app-terraform-plan
+    environment: production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Terraform setup
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Terraform init
+        run: |
+          cd "$TERRAFORM_APP_PATH"
+          terraform init
+
+      - name: Terraform apply
+        run: |
+          cd "$TERRAFORM_APP_PATH"
+          terraform apply -no-color -auto-approve
+
+  app-build-and-publish:
+    name: App - Build and publish
+    needs:
+      - app-terraform-apply
+    environment: production
     runs-on: ubuntu-latest
     steps:
       - name: Github -> Checkout
