@@ -24,11 +24,15 @@ With Rolling Update, ECS will replace running tasks with new tasks and it can be
 - **minimumHealthyPercent**: the lower bound of instances that must be running during deployment, rounded up;
 - **maximumPercent**: the upper bound of instances that should be running during deployment, rounded down;
 
-If *minimumHealthyPercent* is 50%, *maximumPercent* is 150% and there are 5 instances running, 3 (5 * 0.5, rounded up) instances is the lower bound and 7 (5 * 1.5, rounded down) instances is the upper bound.
+If *minimumHealthyPercent* is 50%, *maximumPercent* is 150% and there are 5 instances running, 3 (5 * 0.5, rounded up) instances is the lower bound and 7 (5 * 1.5, rounded down) instances is the upper bound. I did the experiment and these are the results:
 
-| New Instances Running | New Instances Deprovisioning | Old Instances Running | Old Instances Provisioning |
+| Old Instances Running | Old Instances Deprovisioning | New Instances Running | New Instances Provisioning |
 | :-------------------: | :--------------------------: | :-------------------: | :------------------------: |
 |           5           |              0               |           -           |             -              |
+|           3           |              2               |           -           |             2              |
+|           1           |              2               |           2           |             2              |
+|           0           |              1               |           4           |             1              |
+|           0           |              0               |           5           |             0              |
 
 > If minimumHealthyPercent and maximumPercent combinations makes deployment impossible, it will throw an error!
 
