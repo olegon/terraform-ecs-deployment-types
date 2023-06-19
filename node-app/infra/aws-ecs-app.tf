@@ -53,8 +53,8 @@ resource "aws_ecs_service" "app" {
   name            = var.app_name
   task_definition = aws_ecs_task_definition.app.arn
 
-  deployment_minimum_healthy_percent = 50
-  deployment_maximum_percent         = 150
+  deployment_minimum_healthy_percent = 100
+  deployment_maximum_percent         = 200
 
   deployment_controller {
     # Changing it will recreate the ECS Service
