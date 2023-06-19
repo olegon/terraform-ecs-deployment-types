@@ -7,7 +7,7 @@ on:
 
 env:
   APP_PATH: node-app/src
-  AWS_REGION: us-east-1
+  AWS_REGION: sa-east-1
   CODEDEPLOY_APPLICATION_NAME: node-app-codedeploy
   CODEDEPLOY_DEPLOYMENT_GROUP_NAME: node-app-codedeploy
   CONTAINER_NAME: node-app
