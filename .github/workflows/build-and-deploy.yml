@@ -7,34 +7,27 @@ on:
 
 env:
   AWS_REGION: sa-east-1
-  TERRAFORM_PLATFORM_PATH: platform
 
 jobs:
-  experiment:
-    uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-experiment.yml@main
+  # Platform should reside in another repository.
+  plataform-terraform:
+    uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
     with:
-      my-input: my-input-value
+      aws-region: ${{ env.AWS_REGION }}
+      terraform-directory-path: platform
     secrets: inherit
 
-  # # Platform should reside in another repository.
-  # plataform-terraform:
-  #   uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
-  #   with:
-  #     aws-region: ${{ env.AWS_REGION }}
-  #     terraform-directory-path: platform
-  #   secrets: inherit
-
-  # app-build-and-publish:
-  #   uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-build-and-deploy.yml@main
-  #   with:
-  #     app-path: node-app/src
-  #     aws-region: ${{ env.AWS_REGION }}
-  #     codedeploy-application-name: node-app-codedeploy
-  #     codedeploy-deployment-group-name: node-app-codedeploy
-  #     container-name: node-app
-  #     container-port: 5000
-  #     ecr-repository-name: node-app
-  #     ecs-cluster-name: my-ecs-cluster
-  #     ecs-service-name: node-app
-  #     terraform-app-path: node-app/infra
-  #   secrets: inherit
+  app-build-and-publish:
+    uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-build-and-deploy.yml@main
+    with:
+      app-path: node-app/src
+      aws-region: ${{ env.AWS_REGION }}
+      codedeploy-application-name: node-app-codedeploy
+      codedeploy-deployment-group-name: node-app-codedeploy
+      container-name: node-app
+      container-port: 5000
+      ecr-repository-name: node-app
+      ecs-cluster-name: my-ecs-cluster
+      ecs-service-name: node-app
+      terraform-app-path: node-app/infra
+    secrets: inherit
