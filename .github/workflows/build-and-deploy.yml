@@ -5,15 +5,12 @@ on:
     branches:
       - main
 
-env:
-  AWS_REGION: sa-east-1
-
 jobs:
   # Platform should reside in another repository.
   plataform-terraform:
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
     with:
-      aws-region: ${{ env.AWS_REGION }}
+      aws-region: sa-east-1
       terraform-directory-path: platform
     secrets: inherit
 
@@ -21,7 +18,7 @@ jobs:
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-build-and-deploy.yml@main
     with:
       app-path: node-app/src
-      aws-region: ${{ env.AWS_REGION }}
+      aws-region: sa-east-1
       codedeploy-application-name: node-app-codedeploy
       codedeploy-deployment-group-name: node-app-codedeploy
       container-name: node-app
