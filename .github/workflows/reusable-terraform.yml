@@ -1,0 +1,91 @@
+name: Terraform Plan & Apply
+
+on:
+  workflow_call:
+    inputs:
+      aws-region:
+        required: true
+        type: string
+      terraform-directory-path:
+        required: true
+        type: string
+      terraform-version:
+        required: false
+        type: string
+        default: 1.5.0
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+
+env:
+  TERRAFORM_DIRECTORY_PATH: ${{ inputs.terraform-directory-path }}
+
+jobs:
+  terraform-plan:
+    name: Terraform plan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ inputs.aws-region }}
+
+      - name: Terraform setup
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ inputs.terraform-version }}
+
+      - name: Terraform init
+        run: |
+          cd "$TERRAFORM_DIRECTORY_PATH"
+          terraform init
+
+      - name: Terraform validate
+        run: |
+          cd "$TERRAFORM_DIRECTORY_PATH"
+          terraform validate -no-color
+
+      - name: Terraform plan
+        run: |
+          cd "$TERRAFORM_DIRECTORY_PATH"
+          terraform plan -no-color
+
+
+  terraform-apply:
+    name: Terraform apply
+    needs:
+      - terraform-plan
+    environment: production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Terraform setup
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ inputs.terraform-version }}
+
+      - name: Terraform init
+        run: |
+          cd "$TERRAFORM_DIRECTORY_PATH"
+          terraform init
+
+      - name: Terraform apply
+        run: |
+          cd "$TERRAFORM_DIRECTORY_PATH"
+          terraform apply -no-color -auto-approve

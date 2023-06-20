@@ -1,0 +1,17 @@
+name: Just a experiment!
+
+on:
+  workflow_call:
+    inputs:
+      my-input:
+        required: true
+        type: string
+
+jobs:
+  job-experiment:
+    name: Experiment Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Experiment Step 
+        run: |
+          ls -la
