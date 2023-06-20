@@ -12,6 +12,9 @@ env:
 jobs:
   experiment:
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-experiment.yml@main
+    with:
+      my-input: my-input-value
+    secrets: inherit
 
   # # Platform should reside in another repository.
   # plataform-terraform:
