@@ -34,7 +34,7 @@ resource "aws_lb_listener_rule" "lb_ingress_http_prod_app" {
 }
 
 resource "aws_lb_target_group" "lb_ingress_app_blue" {
-  name        = "my-lb-ingress-app-blue"
+  name        = format("%s-blue", var.app_name)
   port        = var.app_docker_port
   protocol    = "HTTP"
   target_type = "ip"
@@ -42,8 +42,15 @@ resource "aws_lb_target_group" "lb_ingress_app_blue" {
 
   health_check {
     enabled = true
-    path    = format("/%s/actuator/health", var.app_name)
-    matcher = "200-299"
+
+    healthy_threshold   = 2
+    interval            = 10
+    matcher             = "200-299"
+    path                = var.app_health_check_path
+    port                = "traffic-port"
+    protocol            = "http"
+    timeout             = 5
+    unhealthy_threshold = 5
   }
 
   deregistration_delay = 60
@@ -83,7 +90,7 @@ resource "aws_lb_listener_rule" "lb_ingress_http_test_app" {
 }
 
 resource "aws_lb_target_group" "lb_ingress_app_green" {
-  name        = "my-lb-ingress-app-green"
+  name        = format("%s-green", var.app_name)
   port        = var.app_docker_port
   protocol    = "HTTP"
   target_type = "ip"
@@ -91,8 +98,15 @@ resource "aws_lb_target_group" "lb_ingress_app_green" {
 
   health_check {
     enabled = true
-    path    = format("/%s/actuator/health", var.app_name)
-    matcher = "200-299"
+
+    healthy_threshold   = 2
+    interval            = 10
+    matcher             = "200-299"
+    path                = var.app_health_check_path
+    port                = "traffic-port"
+    protocol            = "http"
+    timeout             = 5
+    unhealthy_threshold = 5
   }
 
   deregistration_delay = 60

@@ -18,6 +18,11 @@ variable "app_docker_port" {
   default = 5000
 }
 
+variable "app_health_check_path" {
+  type    = string
+  default = "/node-app/v1/health"
+}
+
 variable "ecs_cluster_name" {
   type    = string
   default = "my-ecs-cluster"

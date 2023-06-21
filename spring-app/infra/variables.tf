@@ -18,6 +18,11 @@ variable "app_docker_port" {
   default = 8080
 }
 
+variable "app_health_check_path" {
+  type    = string
+  default = "/spring-app/v1/health"
+}
+
 variable "ecs_cluster_name" {
   type    = string
   default = "my-ecs-cluster"
