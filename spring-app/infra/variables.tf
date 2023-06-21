@@ -20,7 +20,7 @@ variable "app_docker_port" {
 
 variable "app_health_check_path" {
   type    = string
-  default = "/spring-app/v1/health"
+  default = "/spring-app/actuator/health"
 }
 
 variable "ecs_cluster_name" {
