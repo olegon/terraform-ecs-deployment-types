@@ -16,6 +16,15 @@ provider "aws" {
   }
 }
 
-data "aws_caller_identity" "current" {}
+module "infra" {
+  source = "../../terraform-app-module"
 
-data "aws_region" "current" {}
+  app_docker_image      = "nginx:latest"
+  app_docker_port       = 5000
+  app_health_check_path = "/spring-app/actuator/health"
+  app_name              = "spring-app"
+  ecs_cluster_name      = "my-ecs-cluster"
+
+  deployment_bluegreen_strategy = "CodeDeployDefault.ECSAllAtOnce"
+  deployment_type               = "Blue Green"
+}
