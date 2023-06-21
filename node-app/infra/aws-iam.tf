@@ -11,7 +11,7 @@ data "aws_iam_policy_document" "ecs_task_execution_role_trust" {
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name               = "my-app-task-execution-role"
+  name               = format("%s-task-execution-role", var.app_name)
   assume_role_policy = data.aws_iam_policy_document.ecs_task_execution_role_trust.json
 }
 
