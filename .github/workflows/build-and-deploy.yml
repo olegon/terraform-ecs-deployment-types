@@ -19,7 +19,7 @@ jobs:
       - plataform-terraform
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
     with:
-      aws-region: ${{ inputs.aws-region }}
+      aws-region: sa-east-1
       terraform-directory-path: node-app/infra
     secrets: inherit
 
