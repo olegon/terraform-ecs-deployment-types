@@ -44,8 +44,6 @@ on:
         required: true
   
 env:
-  APP_PATH: ${{ inputs.app-path }}
-  AWS_REGION: ${{ inputs.aws-region }}
   CODEDEPLOY_APPLICATION_NAME: ${{ inputs.codedeploy-application-name }}
   CODEDEPLOY_DEPLOYMENT_GROUP_NAME: ${{ inputs.codedeploy-deployment-group-name }}
   CONTAINER_NAME: ${{ inputs.container-name }}
@@ -54,13 +52,12 @@ env:
   ECS_CLUSTER_NAME: ${{ inputs.ecs-cluster-name }}
   ECS_SERVICE_NAME: ${{ inputs.ecs-service-name }}
   ECS_TASK_DEFINITION_FILE: ${{ inputs.ecs-task-definition-file }}
-  TERRAFORM_APP_PATH: ${{ inputs.terraform-app-path }}
 
 jobs:
   infra-terraform:
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
     with:
-      aws-region: ${{ env.AWS_REGION }}
+      aws-region: ${{ inputs.aws-region }}
       terraform-directory-path: app/infra
     secrets: inherit
 
@@ -79,7 +76,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ inputs.aws-region }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -90,11 +87,11 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
+        working-directory: ${{ inputs.app-path }}
         run: |
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          cd "$APP_PATH"
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY_NAME:$IMAGE_TAG" >> $GITHUB_OUTPUT
