@@ -11,7 +11,6 @@ data "aws_lb_listener" "lb_ingress_http_prod" {
 
 resource "aws_lb_listener_rule" "lb_ingress_http_prod_app" {
   listener_arn = data.aws_lb_listener.lb_ingress_http_prod.arn
-  priority     = 100
 
   action {
     type             = "forward"
@@ -67,7 +66,6 @@ data "aws_lb_listener" "lb_ingress_http_test" {
 
 resource "aws_lb_listener_rule" "lb_ingress_http_test_app" {
   listener_arn = data.aws_lb_listener.lb_ingress_http_test.arn
-  priority     = 100
 
   action {
     type             = "forward"
