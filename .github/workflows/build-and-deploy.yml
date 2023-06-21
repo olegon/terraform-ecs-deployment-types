@@ -14,9 +14,18 @@ jobs:
       terraform-directory-path: platform
     secrets: inherit
 
-  app-build-and-publish:
+  infra-terraform:
     needs:
       - plataform-terraform
+    uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
+    with:
+      aws-region: ${{ inputs.aws-region }}
+      terraform-directory-path: node-app/infra
+    secrets: inherit
+
+  app-build-and-publish:
+    needs:
+      - infra-terraform
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-build-and-deploy.yml@main
     with:
       app-path: node-app/src

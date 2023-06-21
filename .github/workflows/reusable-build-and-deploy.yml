@@ -54,17 +54,8 @@ env:
   ECS_TASK_DEFINITION_FILE: ${{ inputs.ecs-task-definition-file }}
 
 jobs:
-  infra-terraform:
-    uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
-    with:
-      aws-region: ${{ inputs.aws-region }}
-      terraform-directory-path: ${{ inputs.terraform-app-path }}
-    secrets: inherit
-
   app-build-and-publish:
     name: App - Build and publish
-    needs:
-      - infra-terraform
     environment: production
     runs-on: ubuntu-latest
     steps:
