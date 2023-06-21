@@ -48,7 +48,7 @@ resource "aws_lb_target_group" "lb_ingress_app_blue" {
     matcher             = "200-299"
     path                = var.app_health_check_path
     port                = "traffic-port"
-    protocol            = "http"
+    protocol            = "HTTP"
     timeout             = 5
     unhealthy_threshold = 5
   }
@@ -104,7 +104,7 @@ resource "aws_lb_target_group" "lb_ingress_app_green" {
     matcher             = "200-299"
     path                = var.app_health_check_path
     port                = "traffic-port"
-    protocol            = "http"
+    protocol            = "HTTP"
     timeout             = 5
     unhealthy_threshold = 5
   }
