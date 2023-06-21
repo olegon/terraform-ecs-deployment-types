@@ -58,7 +58,7 @@ jobs:
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
     with:
       aws-region: ${{ inputs.aws-region }}
-      terraform-directory-path: app/infra
+      terraform-directory-path: ${{ inputs.terraform-app-path }}
     secrets: inherit
 
   app-build-and-publish:
