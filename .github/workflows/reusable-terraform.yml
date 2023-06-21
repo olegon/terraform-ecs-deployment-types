@@ -19,8 +19,6 @@ on:
       AWS_SECRET_ACCESS_KEY:
         required: true
 
-env:
-  TERRAFORM_DIRECTORY_PATH: ${{ inputs.terraform-directory-path }}
 
 jobs:
   terraform-plan:
@@ -43,18 +41,18 @@ jobs:
           terraform_version: ${{ inputs.terraform-version }}
 
       - name: Terraform init
+        working-directory: ${{ inputs.terraform-directory-path }}
         run: |
-          cd "$TERRAFORM_DIRECTORY_PATH"
           terraform init
 
       - name: Terraform validate
+        working-directory: ${{ inputs.terraform-directory-path }}
         run: |
-          cd "$TERRAFORM_DIRECTORY_PATH"
           terraform validate -no-color
 
       - name: Terraform plan
+        working-directory: ${{ inputs.terraform-directory-path }}
         run: |
-          cd "$TERRAFORM_DIRECTORY_PATH"
           terraform plan -no-color
 
 
@@ -81,11 +79,11 @@ jobs:
           terraform_version: ${{ inputs.terraform-version }}
 
       - name: Terraform init
+        working-directory: ${{ inputs.terraform-directory-path }}
         run: |
-          cd "$TERRAFORM_DIRECTORY_PATH"
           terraform init
 
       - name: Terraform apply
+        working-directory: ${{ inputs.terraform-directory-path }}
         run: |
-          cd "$TERRAFORM_DIRECTORY_PATH"
           terraform apply -no-color -auto-approve
