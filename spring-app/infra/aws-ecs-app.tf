@@ -37,9 +37,9 @@ resource "aws_ecs_task_definition" "app" {
           "CMD-SHELL",
           "curl --fail http://localhost:${var.app_docker_port}${var.app_health_check_path}"
         ]
-        interval    = 5
-        timeout     = 2
-        retries     = 3
+        interval    = 10
+        timeout     = 5
+        retries     = 10
         startPeriod = 5
       }
     }
