@@ -66,6 +66,7 @@ I've created a simple application and a simple platform to study it, so you will
 
 - **platform**: has Terraform code that deploys shared resources like ECS Cluster, ELB etc needed by on or more apps;
 - **node-app**: has a `src` directory with the *node* application and `infra` directory with Terraform code that deploys ECS Service, Code Deploy etc needed only by the app;
+- **spring-app**: it's the same *node* app, but written with *Spring* and *Kotlin*. I've created it to test if Code Deploy can work with multiple rules inside a ALB Listener. It can!
 - **.github**: has Github Actions code that deploys all these items to an AWS account;
 
 I recommend to see every file because I added comments that shows the mistakes I've made.
