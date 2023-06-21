@@ -59,7 +59,7 @@ jobs:
       codedeploy-application-name: spring-app-codedeploy
       codedeploy-deployment-group-name: spring-app-codedeploy
       container-name: spring-app
-      container-port: 5000
+      container-port: 8080
       ecr-repository-name: spring-app
       ecs-cluster-name: my-ecs-cluster
       ecs-service-name: spring-app
