@@ -48,25 +48,25 @@ With Blue Green, Code Deploy shifts traffic between Blue and Green ELB Target Gr
 
 There are very good images at [AWS Docs](https://docs.aws.amazon.com/codedeploy/latest/userguide/tutorial-ecs-deployment.html) explaining that this is the initial state:
 
-![](resources/2023-06-17-19-30-51.png)
+![](.resources/2023-06-17-19-30-51.png)
 
 And this is the final state:
 
-![](resources/2023-06-17-19-31-08.png)
+![](.resources/2023-06-17-19-31-08.png)
 
 Basically, Code Deploys creates a new ECS Task Set (a collection os ECS tasks!), attach it to the Target Group 2 and shifts traffic from Target Group 1 to Target Group 2. At this time, there are two ECS Task Sets. After shifting all traffic, it destroys the old ECS Task Set after 5 minutes.
 
 We can add a Test Listener and perform tests using a Lambda to stop deployment on failure using a custom logic:
 
-![](resources/2023-06-19-12-29-07.png)
+![](.resources/2023-06-19-12-29-07.png)
 
 ## 2. How it really works?
 
 I've created a simple application and a simple platform to study it, so you will find these main directories:
 
 - **platform**: has Terraform code that deploys shared resources like ECS Cluster, ELB etc needed by on or more apps;
-- **node-app**: has a `src` directory with the *node* application and `infra` directory with Terraform code that deploys ECS Service, Code Deploy etc needed only by the app;
-- **spring-app**: it's the same *node* app, but written with *Spring* and *Kotlin*. I've created it to test if Code Deploy can work with multiple rules inside a ALB Listener. It can!
+- **apps/node-app**: has a `src` directory with the *node* application and `infra` directory with Terraform code that deploys ECS Service, Code Deploy etc needed only by the app;
+- **apps/spring-app**: it's the same *node* app, but written with *Spring* and *Kotlin*. I've created it to test if Code Deploy can work with multiple rules inside a ALB Listener. It can!
 - **.github**: has Github Actions code that deploys all these items to an AWS account;
 
 I recommend to see every file because I added comments that shows the mistakes I've made.

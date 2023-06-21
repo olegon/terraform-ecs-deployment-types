@@ -34,9 +34,6 @@ on:
         required: false
         type: string
         default: task-definition.json
-      terraform-app-path:
-        required: true
-        type: string
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
