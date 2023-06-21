@@ -1,4 +1,4 @@
-name: Just a experiment!
+name: Reusable - Just a experiment!
 
 on:
   workflow_call:

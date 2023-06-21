@@ -1,4 +1,4 @@
-name: Terraform Plan & Apply
+name: Reusable - Terraform plan & apply
 
 on:
   workflow_call:

@@ -1,4 +1,4 @@
-name: Reusable - Deploy to Amazon ECS
+name: Reusable - Build Docker image and deploy to Amazon ECS
 
 on:
   workflow_call:
@@ -44,12 +44,9 @@ on:
         required: true
   
 env:
-  CODEDEPLOY_APPLICATION_NAME: ${{ inputs.codedeploy-application-name }}
-  CODEDEPLOY_DEPLOYMENT_GROUP_NAME: ${{ inputs.codedeploy-deployment-group-name }}
   CONTAINER_NAME: ${{ inputs.container-name }}
   CONTAINER_PORT: ${{ inputs.container-port }}
   ECR_REPOSITORY_NAME: ${{ inputs.ecr-repository-name }}
-  ECS_CLUSTER_NAME: ${{ inputs.ecs-cluster-name }}
   ECS_SERVICE_NAME: ${{ inputs.ecs-service-name }}
   ECS_TASK_DEFINITION_FILE: ${{ inputs.ecs-task-definition-file }}
 
@@ -123,8 +120,8 @@ jobs:
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE_NAME }}
-          cluster: ${{ env.ECS_CLUSTER_NAME }}
+          cluster: ${{ inputs.ecs-cluster-name }}
           wait-for-service-stability: true
           codedeploy-appspec: appspec.json
-          codedeploy-application: ${{ env.CODEDEPLOY_APPLICATION_NAME }}
-          codedeploy-deployment-group: ${{ env.CODEDEPLOY_DEPLOYMENT_GROUP_NAME }}
+          codedeploy-application: ${{ inputs.codedeploy-application-name }}
+          codedeploy-deployment-group: ${{ inputs.codedeploy-deployment-group-name }}

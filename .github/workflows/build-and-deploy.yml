@@ -1,4 +1,4 @@
-name: Deploy to Amazon ECS
+name: Terraform plan & apply, build Docker image and deploy to Amazon ECS
 
 on:
   push:
