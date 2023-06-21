@@ -64,7 +64,7 @@ jobs:
   app-build-and-publish:
     name: App - Build and publish
     needs:
-      - infra-apply
+      - infra-terraform
     environment: production
     runs-on: ubuntu-latest
     steps:
