@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket         = "289389227463-terraform-backend"
-    key            = "terraform-ecs-deployment-types/spring-app/infra/terraform.tfstate"
+    key            = "terraform-ecs-deployment-types/spring-app.tfstate"
     dynamodb_table = "289389227463-terraform-backend"
     region         = "sa-east-1"
   }
