@@ -14,7 +14,7 @@ jobs:
       terraform-directory-path: platform
     secrets: inherit
 
-  infra-terraform:
+  node-app-terraform:
     needs:
       - plataform-terraform
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
@@ -23,9 +23,9 @@ jobs:
       terraform-directory-path: node-app/infra
     secrets: inherit
 
-  app-build-and-publish:
+  node-app-build-and-publish:
     needs:
-      - infra-terraform
+      - node-app-terraform
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-build-and-deploy.yml@main
     with:
       app-path: node-app/src
@@ -38,4 +38,30 @@ jobs:
       ecs-cluster-name: my-ecs-cluster
       ecs-service-name: node-app
       terraform-app-path: node-app/infra
+    secrets: inherit
+
+  spring-app-terraform:
+    needs:
+      - plataform-terraform
+    uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
+    with:
+      aws-region: sa-east-1
+      terraform-directory-path: spring-app/infra
+    secrets: inherit
+
+  spring-app-build-and-publish:
+    needs:
+      - spring-app-terraform
+    uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-build-and-deploy.yml@main
+    with:
+      app-path: spring-app/src
+      aws-region: sa-east-1
+      codedeploy-application-name: spring-app-codedeploy
+      codedeploy-deployment-group-name: spring-app-codedeploy
+      container-name: spring-app
+      container-port: 5000
+      ecr-repository-name: spring-app
+      ecs-cluster-name: my-ecs-cluster
+      ecs-service-name: spring-app
+      terraform-app-path: spring-app/infra
     secrets: inherit
