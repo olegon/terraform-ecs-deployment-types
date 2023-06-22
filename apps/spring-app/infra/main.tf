@@ -20,7 +20,7 @@ module "infra" {
   source = "../../../terraform-modules/app-module"
 
   app_docker_image      = "nginx:latest"
-  app_docker_port       = 5000
+  app_docker_port       = 8080
   app_health_check_path = "/spring-app/actuator/health"
   app_name              = "spring-app"
   ecs_cluster_name      = "my-ecs-cluster"
