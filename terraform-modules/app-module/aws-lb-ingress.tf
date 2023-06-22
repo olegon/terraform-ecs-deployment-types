@@ -19,7 +19,7 @@ resource "aws_lb_listener_rule" "lb_ingress_http_prod_app" {
 
   condition {
     host_header {
-      values = [format("%s.apps.ogn.one", var.app_name)]
+      values = [format("%s.ogn.one", var.app_name)]
     }
   }
 
@@ -73,7 +73,7 @@ resource "aws_lb_listener_rule" "lb_ingress_http_test_app" {
 
   condition {
     host_header {
-      values = [format("%s.apps.ogn.one", var.app_name)]
+      values = [format("%s.ogn.one", var.app_name)]
     }
   }
 

@@ -4,7 +4,7 @@ data "aws_route53_zone" "ogn" {
 
 resource "aws_route53_record" "lb_ingress" {
   zone_id = data.aws_route53_zone.ogn.zone_id
-  name    = "*.apps.ogn.one"
+  name    = "*.ogn.one"
   type    = "A"
 
   alias {
