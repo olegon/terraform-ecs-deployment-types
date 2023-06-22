@@ -53,7 +53,7 @@ jobs:
       - spring-app-terraform
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-build-and-deploy.yml@main
     with:
-      app-path: appspring-app/s/src
+      app-path: apps/spring-app/src
       aws-region: sa-east-1
       codedeploy-application-name: spring-app-codedeploy
       codedeploy-deployment-group-name: spring-app-codedeploy
