@@ -29,7 +29,6 @@ resource "aws_ecs_task_definition" "app" {
         }
       ]
       environment = [
-        { name = "PREFIX", value = format("/%s", var.app_name) },
         { name = "PORT", value = tostring(var.app_docker_port) }
       ]
       healthCheck = {

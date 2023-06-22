@@ -11,8 +11,11 @@ resource "aws_lb" "lb_ingress" {
 
 resource "aws_lb_listener" "lb_ingress_http_prod" {
   load_balancer_arn = aws_lb.lb_ingress.arn
-  port              = 80
-  protocol          = "HTTP"
+  port              = 443
+  protocol          = "HTTPS"
+
+  ssl_policy      = "ELBSecurityPolicy-2016-08"
+  certificate_arn = data.aws_acm_certificate.ogn.arn
 
   default_action {
     type = "fixed-response"
@@ -20,15 +23,18 @@ resource "aws_lb_listener" "lb_ingress_http_prod" {
     fixed_response {
       content_type = "text/plain"
       status_code  = 404
-      message_body = "Not found at my-lb-ingress ALB."
+      message_body = "Not found on ALB."
     }
   }
 }
 
 resource "aws_lb_listener" "lb_ingress_http_test" {
   load_balancer_arn = aws_lb.lb_ingress.arn
-  port              = 8080
-  protocol          = "HTTP"
+  port              = 8443
+  protocol          = "HTTPS"
+
+  ssl_policy      = "ELBSecurityPolicy-2016-08"
+  certificate_arn = data.aws_acm_certificate.ogn.arn
 
   default_action {
     type = "fixed-response"
@@ -36,7 +42,7 @@ resource "aws_lb_listener" "lb_ingress_http_test" {
     fixed_response {
       content_type = "text/plain"
       status_code  = 404
-      message_body = "Not found at my-lb-ingress ALB."
+      message_body = "Not found on ALB."
     }
   }
 }

@@ -1,26 +1,22 @@
 variable "app_name" {
   type    = string
-  default = "my-app"
 }
 
 variable "app_docker_image" {
   type    = string
-  default = "nginx:latest"
 }
 
 variable "app_docker_port" {
   type    = number
-  default = 8080
 }
 
 variable "app_health_check_path" {
   type    = string
-  default = "/my-app/actuator/health"
+  default = "/health"
 }
 
 variable "ecs_cluster_name" {
   type    = string
-  default = "my-ecs-cluster"
 }
 
 variable "deployment_type" {

@@ -21,7 +21,7 @@ module "infra" {
 
   app_docker_image      = "nginx:latest"
   app_docker_port       = 5000
-  app_health_check_path = "/node-app/v1/health"
+  app_health_check_path = "/v1/health"
   app_name              = "node-app"
   ecs_cluster_name      = "my-ecs-cluster"
 
