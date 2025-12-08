@@ -12,7 +12,7 @@ resource "aws_lb" "lb_ingress" {
 resource "aws_lb_listener" "lb_ingress_http_prod" {
   load_balancer_arn = aws_lb.lb_ingress.arn
   port              = 80
-  protocol          = "HTTPS"
+  protocol          = "HTTP"
 
   default_action {
     type = "fixed-response"
@@ -28,7 +28,7 @@ resource "aws_lb_listener" "lb_ingress_http_prod" {
 resource "aws_lb_listener" "lb_ingress_http_test" {
   load_balancer_arn = aws_lb.lb_ingress.arn
   port              = 8080
-  protocol          = "HTTPS"
+  protocol          = "HTTP"
 
   default_action {
     type = "fixed-response"
