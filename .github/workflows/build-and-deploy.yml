@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   # Platform should reside in another repository.
-  plataform-terraform:
+  platform-terraform:
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
     with:
       aws-region: sa-east-1
@@ -20,7 +20,7 @@ jobs:
 
   node-app-terraform:
     needs:
-      - plataform-terraform
+      - platform-terraform
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
     with:
       aws-region: sa-east-1
@@ -45,7 +45,7 @@ jobs:
 
   spring-app-terraform:
     needs:
-      - plataform-terraform
+      - platform-terraform
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
     with:
       aws-region: sa-east-1
