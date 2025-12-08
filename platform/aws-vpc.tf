@@ -16,8 +16,8 @@ resource "aws_security_group" "lb_ingress" {
 
   ingress {
     description      = "http (prod)"
-    from_port        = 443
-    to_port          = 443
+    from_port        = 80
+    to_port          = 80
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
@@ -25,8 +25,8 @@ resource "aws_security_group" "lb_ingress" {
 
   ingress {
     description      = "http (test)"
-    from_port        = 8443
-    to_port          = 8443
+    from_port        = 8080
+    to_port          = 8080
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
