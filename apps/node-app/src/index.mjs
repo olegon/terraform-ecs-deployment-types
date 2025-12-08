@@ -1,5 +1,5 @@
 import express from 'express';
-import config from './package.json' assert { type: "json" };
+import config from './package.json' with { type: "json" };
 
 const PORT = process.env.PORT ?? 5000;
 
