@@ -1,5 +1,9 @@
 name: Reusable - Build Docker image and deploy to Amazon ECS
 
+permissions:
+  id-token: write
+  contents: read
+
 on:
   workflow_call:
     inputs:
