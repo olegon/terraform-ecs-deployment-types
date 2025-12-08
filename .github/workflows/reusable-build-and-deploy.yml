@@ -35,9 +35,7 @@ on:
         type: string
         default: task-definition.json
     secrets:
-      AWS_ACCESS_KEY_ID:
-        required: true
-      AWS_SECRET_ACCESS_KEY:
+      AWS_IAM_ROLE_ARN:
         required: true
   
 env:
