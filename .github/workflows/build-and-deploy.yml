@@ -39,7 +39,7 @@ jobs:
     if: ${{ needs.detect-changes.outputs.platform == 'true' }}
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
     with:
-      aws-region: sa-east-1
+      aws-region: us-east-1
       terraform-directory-path: platform
     secrets: inherit
 
@@ -50,7 +50,7 @@ jobs:
     if: ${{ needs.detect-changes.outputs.node_app == 'true' }}
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
     with:
-      aws-region: sa-east-1
+      aws-region: us-east-1
       terraform-directory-path: apps/node-app/infra
     secrets: inherit
 
@@ -62,7 +62,7 @@ jobs:
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-build-and-deploy.yml@main
     with:
       app-path: apps/node-app/src
-      aws-region: sa-east-1
+      aws-region: us-east-1
       codedeploy-application-name: node-app-codedeploy
       codedeploy-deployment-group-name: node-app-codedeploy
       container-name: node-app
@@ -79,7 +79,7 @@ jobs:
     if: ${{ needs.detect-changes.outputs.spring_app == 'true' }}
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
     with:
-      aws-region: sa-east-1
+      aws-region: us-east-1
       terraform-directory-path: apps/spring-app/infra
     secrets: inherit
 
@@ -91,7 +91,7 @@ jobs:
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-build-and-deploy.yml@main
     with:
       app-path: apps/spring-app/src
-      aws-region: sa-east-1
+      aws-region: us-east-1
       codedeploy-application-name: spring-app-codedeploy
       codedeploy-deployment-group-name: spring-app-codedeploy
       container-name: spring-app
