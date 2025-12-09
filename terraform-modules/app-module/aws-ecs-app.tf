@@ -47,7 +47,7 @@ resource "aws_ecs_task_definition" "app" {
 
 resource "aws_ecs_service" "app" {
   cluster         = data.aws_ecs_cluster.this.arn
-  desired_count   = 5
+  desired_count   = 2
   launch_type     = "FARGATE"
   name            = var.app_name
   task_definition = aws_ecs_task_definition.app.arn
@@ -77,7 +77,7 @@ resource "aws_ecs_service" "app" {
   # When Blue Green is active, Code Deploy will change LB as ECS Task Definition for us.
   lifecycle {
     ignore_changes = [
-      desired_count,
+      desired_count2
       load_balancer,
       task_definition
     ]
