@@ -36,7 +36,6 @@ jobs:
 
   platform-terraform:
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.platform == 'true' }}
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
     with:
       aws-region: us-east-1
