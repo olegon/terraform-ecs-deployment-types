@@ -1,4 +1,4 @@
-FROM maven:3-amazoncorretto-17 AS build
+FROM maven:3-amazoncorretto-21 AS build
 
 WORKDIR /opt/app
 
@@ -7,7 +7,7 @@ COPY pom.xml .
 
 RUN mvn package
 
-FROM amazoncorretto:17
+FROM amazoncorretto:21
 
 WORKDIR /opt/app
 
