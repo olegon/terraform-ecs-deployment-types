@@ -9,6 +9,6 @@ router.get('/v1/health', (_, res) => res.send('Healthy!'));
 router.get('/v1/version', (_, res) => res.send(config.version));
 
 const app = express();
-app.use('/', router);
+app.use('/node-app', router);
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}.`));
