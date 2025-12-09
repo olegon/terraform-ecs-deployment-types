@@ -18,9 +18,16 @@ resource "aws_lb_listener_rule" "lb_ingress_http_prod_app" {
   }
 
   condition {
-    host_header {
-      values = [format("%s.ogn.one", var.app_name)]
+    path_pattern {
+      values = [
+        format("/%s", var.app_name),
+        format("/%s/*", var.app_name)
+      ]
     }
+
+    # host_header {
+    #   values = [format("%s.ogn.one", var.app_name)]
+    # }
   }
 
   # When Blue Green is active, Code Deploy will change traffic between Blue and Green Target Groups.
@@ -72,9 +79,16 @@ resource "aws_lb_listener_rule" "lb_ingress_http_test_app" {
   }
 
   condition {
-    host_header {
-      values = [format("%s.ogn.one", var.app_name)]
+    path_pattern {
+      values = [
+        format("/%s", var.app_name),
+        format("/%s/*", var.app_name)
+      ]
     }
+
+    # host_header {
+    #   values = [format("%s.ogn.one", var.app_name)]
+    # }
   }
 
   # When Blue Green is active, Code Deploy will change traffic between Blue and Green Target Groups.
