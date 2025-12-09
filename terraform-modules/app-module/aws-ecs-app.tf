@@ -77,7 +77,7 @@ resource "aws_ecs_service" "app" {
   # When Blue Green is active, Code Deploy will change LB as ECS Task Definition for us.
   lifecycle {
     ignore_changes = [
-      desired_count2
+      desired_count,
       load_balancer,
       task_definition
     ]
