@@ -10,8 +10,33 @@ permissions:
   contents: read
 
 jobs:
-  # Platform should reside in another repository.
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      platform: ${{ steps.filter.outputs.platform }}
+      node_app: ${{ steps.filter.outputs.node_app }}
+      spring_app: ${{ steps.filter.outputs.spring_app }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            platform:
+              - '.github/**'
+              - 'platform/**'
+            node_app:
+              - '.github/**'
+              - 'apps/node-app/**'
+              - 'terraform-modules/**'
+            spring_app:
+              - '.github/**'
+              - 'apps/spring-app/**'
+              - 'terraform-modules/**'
+
   platform-terraform:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.platform == 'true' }}
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
     with:
       aws-region: sa-east-1
@@ -21,6 +46,8 @@ jobs:
   node-app-terraform:
     needs:
       - platform-terraform
+      - detect-changes
+    if: ${{ needs.detect-changes.outputs.node_app == 'true' }}
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
     with:
       aws-region: sa-east-1
@@ -30,6 +57,8 @@ jobs:
   node-app-build-and-publish:
     needs:
       - node-app-terraform
+      - detect-changes
+    if: ${{ needs.detect-changes.outputs.node_app == 'true' }}
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-build-and-deploy.yml@main
     with:
       app-path: apps/node-app/src
@@ -46,6 +75,8 @@ jobs:
   spring-app-terraform:
     needs:
       - platform-terraform
+      - detect-changes
+    if: ${{ needs.detect-changes.outputs.spring_app == 'true' }}
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform.yml@main
     with:
       aws-region: sa-east-1
@@ -55,6 +86,8 @@ jobs:
   spring-app-build-and-publish:
     needs:
       - spring-app-terraform
+      - detect-changes
+    if: ${{ needs.detect-changes.outputs.spring_app == 'true' }}
     uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-build-and-deploy.yml@main
     with:
       app-path: apps/spring-app/src
