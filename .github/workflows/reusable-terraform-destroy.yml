@@ -1,0 +1,52 @@
+name: Reusable - Terraform plan & apply
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  workflow_call:
+    inputs:
+      aws-region:
+        required: true
+        type: string
+      terraform-directory-path:
+        required: true
+        type: string
+      terraform-version:
+        required: false
+        type: string
+        default: 1.14.0
+    secrets:
+      AWS_IAM_ROLE_ARN:
+        required: true
+
+jobs:
+  terraform-destroy:
+    name: Terraform destroy
+    environment: production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ secrets.AWS_IAM_ROLE_ARN }}
+          aws-region: ${{ inputs.aws-region }}
+
+      - name: Terraform setup
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ inputs.terraform-version }}
+
+      - name: Terraform init
+        working-directory: ${{ inputs.terraform-directory-path }}
+        run: |
+          terraform init
+
+      - name: Terraform destroy
+        working-directory: ${{ inputs.terraform-directory-path }}
+        run: |
+          terraform destroy -no-color -auto-approve

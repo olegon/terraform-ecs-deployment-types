@@ -1,0 +1,59 @@
+name: Terraform plan & apply, build Docker image and deploy to Amazon ECS
+
+on:
+  issues:
+    types: [opened]
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  check-issue-type:
+    runs-on: ubuntu-latest
+    outputs:
+      should-destroy: ${{ steps.check.outputs.should-destroy }}
+    steps:
+      - name: Check issue label
+        id: check
+        run: |
+          LABELS="${{ toJson(github.event.issue.labels.*.name) }}"
+          if echo "$LABELS" | grep -q "destroy"; then
+            echo "should-destroy=true" >> $GITHUB_OUTPUT
+          else
+            echo "should-destroy=false" >> $GITHUB_OUTPUT
+          fi
+
+  node-app-terraform:
+    needs: check-issue-type
+    if: ${{ needs.check-issue-type.outputs.should-destroy == 'true' }}
+    uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform-destroy.yml@main
+    with:
+      aws-region: us-east-1
+      terraform-directory-path: apps/node-app/infra
+    secrets: inherit
+
+  spring-app-terraform:
+    needs: check-issue-type
+    if: ${{ needs.check-issue-type.outputs.should-destroy == 'true' }}
+    uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform-destroy.yml@main
+    with:
+      aws-region: us-east-1
+      terraform-directory-path: apps/spring-app/infra
+    secrets: inherit
+
+  platform-terraform:
+    needs:
+      - check-issue-type
+      - node-app-terraform
+      - spring-app-terraform 
+    if: ${{ needs.check-issue-type.outputs.should-destroy == 'true' }}
+    uses: olegon/terraform-ecs-deployment-types/.github/workflows/reusable-terraform-destroy.yml@main
+    with:
+      aws-region: us-east-1
+      terraform-directory-path: platform
+    secrets: inherit
