@@ -38,6 +38,10 @@ on:
         required: false
         type: string
         default: task-definition.json
+      synthetic-test-lambda-arn:
+        required: false
+        type: string
+        default: ""
     secrets:
       AWS_IAM_ROLE_ARN:
         required: true
@@ -109,8 +113,46 @@ jobs:
 
       - name: Create appspec file
         id: create-appspec-file
+        env:
+          SYNTHETIC_TEST_LAMBDA_ARN: ${{ inputs.synthetic-test-lambda-arn }}
         run: |
-          echo '{ "version": 0.0, "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ] }' | envsubst > appspec.json
+          set -euo pipefail
+
+          if [ -n "$SYNTHETIC_TEST_LAMBDA_ARN" ]; then
+            cat > appspec.json <<EOF
+{
+  "version": 0.0,
+  "Resources": [
+    {
+      "TargetService": {
+        "Type": "AWS::ECS::Service",
+        "Properties": {
+          "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE",
+          "LoadBalancerInfo": {
+            "ContainerName": "$CONTAINER_NAME",
+            "ContainerPort": "$CONTAINER_PORT"
+          }
+        }
+      }
+    }
+  ],
+  "Hooks": [
+    {
+      "BeforeAllowTraffic": [
+        {
+          "Name": "synthetic-test",
+          "Type": "Lambda",
+          "FunctionName": "$SYNTHETIC_TEST_LAMBDA_ARN"
+        }
+      ]
+    }
+  ]
+}
+EOF
+          else
+            echo '{ "version": 0.0, "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ] }' | envsubst > appspec.json
+          fi
+
           cat appspec.json
 
       - name: Deploy Amazon ECS task definition

@@ -17,6 +17,10 @@ on:
         required: false
         type: string
         default: 1.14.0
+    outputs:
+      synthetic_test_lambda_arn:
+        description: "ARN of synthetic test Lambda created during apply (if any)"
+        value: ${{ jobs.terraform-apply.outputs.synthetic_test_lambda_arn }}
     secrets:
       AWS_IAM_ROLE_ARN:
         required: true
@@ -87,3 +91,14 @@ jobs:
         working-directory: ${{ inputs.terraform-directory-path }}
         run: |
           terraform apply -no-color -auto-approve
+
+      - name: Export terraform outputs
+        id: export
+        working-directory: ${{ inputs.terraform-directory-path }}
+        run: |
+          # Try to export synthetic_test_lambda_arn if present
+          val=$(terraform output -raw synthetic_test_lambda_arn 2>/dev/null || echo "")
+          echo "synthetic_test_lambda_arn=$val" >> $GITHUB_OUTPUT
+
+    outputs:
+      synthetic_test_lambda_arn: ${{ steps.export.outputs.synthetic_test_lambda_arn }}

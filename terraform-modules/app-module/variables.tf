@@ -41,3 +41,36 @@ variable "deployment_bluegreen_strategy" {
 variable "ecs_service_desired_count" {
   type = number
 }
+
+variable "create_synthetic_test_lambda" {
+  type    = bool
+  default = false
+  description = "If true, create a Lambda used by CodeDeploy hook to perform a synthetic test against the new TaskSet"
+}
+
+variable "synthetic_test_path" {
+  type    = string
+  default = "/"
+  description = "Path to use for synthetic test (appended to ALB DNS and port)"
+}
+
+variable "synthetic_test_listener_port" {
+  type    = number
+  default = 8080
+  description = "Listener port of the test ALB listener (usually 8080)"
+}
+
+variable "synthetic_test_lambda_runtime" {
+  type    = string
+  default = "python3.11"
+}
+
+variable "synthetic_test_lambda_memory" {
+  type    = number
+  default = 128
+}
+
+variable "synthetic_test_lambda_timeout" {
+  type    = number
+  default = 10
+}
