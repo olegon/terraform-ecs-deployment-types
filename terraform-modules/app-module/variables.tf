@@ -37,3 +37,7 @@ variable "deployment_bluegreen_strategy" {
     error_message = format("Valid deployment_bluegreen_strategy values are: %s", join(", ", ["CodeDeployDefault.ECSAllAtOnce", "CodeDeployDefault.ECSCanary10percent15Minutes", "CodeDeployDefault.ECSCanary10percent5Minutes", "CodeDeployDefault.ECSLinear10PercentEvery3Minutes", "CodeDeployDefault.ECSLinear10PercentEvery1Minutes"]))
   }
 }
+
+variable "ecs_service_desired_count" {
+  type = number
+}

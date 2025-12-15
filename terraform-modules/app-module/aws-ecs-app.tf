@@ -47,7 +47,7 @@ resource "aws_ecs_task_definition" "app" {
 
 resource "aws_ecs_service" "app" {
   cluster         = data.aws_ecs_cluster.this.arn
-  desired_count   = 2
+  desired_count   = var.ecs_service_desired_count
   launch_type     = "FARGATE"
   name            = var.app_name
   task_definition = aws_ecs_task_definition.app.arn

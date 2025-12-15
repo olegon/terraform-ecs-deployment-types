@@ -19,11 +19,12 @@ provider "aws" {
 module "infra" {
   source = "../../../terraform-modules/app-module"
 
-  app_docker_image      = "nginx:latest"
-  app_docker_port       = 5000
-  app_health_check_path = "/node-app/v1/health"
-  app_name              = "node-app"
-  ecs_cluster_name      = "my-ecs-cluster"
+  app_docker_image          = "nginx:latest"
+  app_docker_port           = 5000
+  app_health_check_path     = "/node-app/v1/health"
+  app_name                  = "node-app"
+  ecs_cluster_name          = "my-ecs-cluster"
+  ecs_service_desired_count = 2
 
   deployment_bluegreen_strategy = "CodeDeployDefault.ECSAllAtOnce"
   deployment_type               = "Blue Green"
