@@ -4,12 +4,6 @@ data "archive_file" "synthetic_test_lambda" {
   output_path = "${path.module}/lambda/synthetic_test/lambda_function.zip"
 }
 
-data "aws_region" "current" {}
-
-data "aws_lb" "lb_ingress" {
-  name = "my-lb-ingress"
-}
-
 data "aws_iam_policy_document" "lambda_assume_role" {
   statement {
     actions = ["sts:AssumeRole"]

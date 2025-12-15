@@ -1,1 +1,17 @@
-{ "version": 0.0, "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ] }
+{
+    "version": 0.0,
+    "Resources": [
+        {
+            "TargetService": {
+                "Type": "AWS::ECS::Service",
+                "Properties": {
+                    "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE",
+                    "LoadBalancerInfo": {
+                        "ContainerName": "$CONTAINER_NAME",
+                        "ContainerPort": "$CONTAINER_PORT"
+                    }
+                }
+            }
+        }
+    ]
+}
