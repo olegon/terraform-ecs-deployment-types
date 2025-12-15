@@ -119,38 +119,12 @@ jobs:
           set -euo pipefail
 
           if [ -n "$SYNTHETIC_TEST_LAMBDA_ARN" ]; then
-            cat > appspec.json <<EOF
-{
-  "version": 0.0,
-  "Resources": [
-    {
-      "TargetService": {
-        "Type": "AWS::ECS::Service",
-        "Properties": {
-          "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE",
-          "LoadBalancerInfo": {
-            "ContainerName": "$CONTAINER_NAME",
-            "ContainerPort": "$CONTAINER_PORT"
-          }
-        }
-      }
-    }
-  ],
-  "Hooks": [
-    {
-      "BeforeAllowTraffic": [
-        {
-          "Name": "synthetic-test",
-          "Type": "Lambda",
-          "FunctionName": "$SYNTHETIC_TEST_LAMBDA_ARN"
-        }
-      ]
-    }
-  ]
-}
-EOF
+            envsubst < .github/appspec-templates/appspec-with-hook.json.tpl > appspec.json
           else
-            echo '{ "version": 0.0, "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ] }' | envsubst > appspec.json
+            # default appspec without hooks
+            cat > appspec.json <<'JSON'
+{ "version": 0.0, "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ] }
+JSON
           fi
 
           cat appspec.json
