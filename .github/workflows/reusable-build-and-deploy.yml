@@ -121,10 +121,7 @@ jobs:
           if [ -n "$SYNTHETIC_TEST_LAMBDA_ARN" ]; then
             envsubst < .github/appspec-templates/appspec-with-hook.json.tpl > appspec.json
           else
-            # default appspec without hooks
-            cat > appspec.json <<'JSON'
-{ "version": 0.0, "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ] }
-JSON
+            envsubst < .github/appspec-templates/appspec-no-hook.json.tpl > appspec.json
           fi
 
           cat appspec.json
