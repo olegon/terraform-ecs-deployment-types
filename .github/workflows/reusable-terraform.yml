@@ -96,9 +96,10 @@ jobs:
         id: export
         working-directory: ${{ inputs.terraform-directory-path }}
         run: |
-          # Try to export synthetic_test_lambda_arn if present
-          val=$(terraform output -raw synthetic_test_lambda_arn 2>/dev/null || echo "")
-          echo "synthetic_test_lambda_arn=$val" >> $GITHUB_OUTPUT
+          # Try to export synthetic_test_lambda_arn robustly (suppress warnings like 'No outputs found')
+          tfjson=$(terraform output -json 2>/dev/null || echo '{}')
+          synthetic_test_lambda_arn=$(echo "$tfjson" | jq -r '.synthetic_test_lambda_arn.value // ""')
+          echo "synthetic_test_lambda_arn=$synthetic_test_lambda_arn" >> $GITHUB_OUTPUT
 
     outputs:
       synthetic_test_lambda_arn: ${{ steps.export.outputs.synthetic_test_lambda_arn }}

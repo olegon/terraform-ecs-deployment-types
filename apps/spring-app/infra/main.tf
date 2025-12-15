@@ -27,9 +27,9 @@ module "infra" {
   ecs_service_desired_count = 2
 
   # Synthetic test Lambda: create a small Lambda that will call the ALB on port 8080
-  create_synthetic_test_lambda    = true
-  synthetic_test_path             = "/spring-app/actuator/health"
-  synthetic_test_listener_port    = 8080
+  create_synthetic_test_lambda = true
+  synthetic_test_path          = "/spring-app/actuator/health"
+  synthetic_test_listener_port = 8080
 
   deployment_bluegreen_strategy = "CodeDeployDefault.ECSAllAtOnce"
   deployment_type               = "Blue Green"
