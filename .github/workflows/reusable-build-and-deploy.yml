@@ -126,6 +126,21 @@ jobs:
 
           cat appspec.json
 
+      - name: Validate appspec JSON
+        run: |
+          echo "--- appspec.json contents ---"
+          sed -n '1,200p' appspec.json
+          echo "--- validating JSON ---"
+          python - <<'PY'
+import sys, json
+try:
+    json.load(open('appspec.json'))
+    print('appspec.json is valid JSON')
+except Exception as e:
+    print('appspec.json is invalid JSON:', e)
+    raise SystemExit(1)
+PY
+
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
