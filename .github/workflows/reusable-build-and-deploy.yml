@@ -110,7 +110,9 @@ jobs:
       - name: Create appspec file
         id: create-appspec-file
         run: |
-          echo '{ "version": 0.0, "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ] }' | envsubst > appspec.json
+          echo '{ "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ], "Hooks": [ { "BeforeAllowTraffic": "fake-arn..." }] }' | envsubst > appspec.json
+          pwd
+          ls -la
           cat appspec.json
 
       - name: Deploy Amazon ECS task definition
