@@ -73,7 +73,6 @@ jobs:
       ecr-repository-name: node-app
       ecs-cluster-name: my-ecs-cluster
       ecs-service-name: node-app
-      synthetic-test-lambda-arn: ${{ needs.node-app-terraform.outputs.synthetic_test_lambda_arn }}
     secrets: inherit
 
   spring-app-terraform:
@@ -103,5 +102,4 @@ jobs:
       ecr-repository-name: spring-app
       ecs-cluster-name: my-ecs-cluster
       ecs-service-name: spring-app
-      synthetic-test-lambda-arn: ${{ needs.spring-app-terraform.outputs.synthetic_test_lambda_arn }}
     secrets: inherit
