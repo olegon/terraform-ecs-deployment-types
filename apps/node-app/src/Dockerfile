@@ -1,5 +1,8 @@
 FROM node:24-alpine
 
+# Used for health checks
+RUN apk add --no-cache curl
+
 WORKDIR /opt/app
 
 COPY package*.json ./

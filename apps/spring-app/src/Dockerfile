@@ -9,6 +9,9 @@ RUN mvn package
 
 FROM amazoncorretto:21-alpine
 
+# Used for health checks
+RUN apk add --no-cache curl
+
 WORKDIR /opt/app
 
 COPY --from=build /opt/app/target/spring-app*.jar app.jar
