@@ -43,7 +43,7 @@ module "before_allow_traffic_lambda_hook" {
   memory_size = 128
 
   source_path = [
-    "../before-allow-traffic-hook-lambda-src/index.js",
+    "../before-allow-traffic-hook-lambda-src/index.mjs",
   ]
 
   # environment_variables = {

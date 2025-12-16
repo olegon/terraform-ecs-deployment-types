@@ -4,10 +4,14 @@
   "description": "",
   "main": "main.js",
   "scripts": {
+    "start": "node main.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "Leandro Gonçalves de Oliveira <olegon.main@gmail.com>",
   "license": "MIT",
-  "type": "commonjs"
+  "type": "commonjs",
+  "dependencies": {
+    "@aws-sdk/client-codedeploy": "^3.953.0"
+  }
 }
