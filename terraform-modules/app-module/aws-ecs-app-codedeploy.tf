@@ -48,7 +48,7 @@ resource "aws_codedeploy_deployment_group" "app" {
 
     terminate_blue_instances_on_deployment_success {
       action                           = "TERMINATE"
-      termination_wait_time_in_minutes = 5
+      termination_wait_time_in_minutes = 1 # Could be greater, but for demo purposes we keep it low
     }
   }
 

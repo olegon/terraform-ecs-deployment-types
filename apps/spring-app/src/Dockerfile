@@ -7,7 +7,7 @@ COPY pom.xml .
 
 RUN mvn package
 
-FROM amazoncorretto:21
+FROM amazoncorretto:21-alpine
 
 WORKDIR /opt/app
 
