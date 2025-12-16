@@ -50,6 +50,9 @@ module "before_allow_traffic_lambda_hook" {
   #   "X" = "Y"
   # }
 
+  attach_policy_json = true
+  policy_json        = data.aws_iam_policy_document.before_allow_traffic_lambda_hook.json
+
   allowed_triggers = {
     CodeDeployBeforeAllowTrafficHook = {
       principal = "codedeploy.amazonaws.com"
