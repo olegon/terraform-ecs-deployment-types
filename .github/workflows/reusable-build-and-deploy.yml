@@ -111,8 +111,8 @@ jobs:
         id: create-appspec-file
         run: |
           # Hooks docs: https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-hooks.html
-          # echo '{ "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ], "Hooks": [ { "BeforeAllowTraffic": "fake-arn..." } ] }' | envsubst > appspec.json
-          echo '{ "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ], "Hooks": [ ] }' | envsubst > appspec.json
+          echo '{ "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ], "Hooks": [ { "BeforeAllowTraffic": "arn:aws:lambda:us-east-1:105029661252:function:node-app-code-deploy-before-allow-traffic-lambda-hook" } ] }' | envsubst > appspec.json
+          # echo '{ "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ], "Hooks": [ ] }' | envsubst > appspec.json
           pwd
           ls -la
           cat appspec.json
