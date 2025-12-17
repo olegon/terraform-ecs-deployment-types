@@ -5,8 +5,8 @@ const { AWS_REGION } = process.env;
 const codedeploy = new CodeDeployClient({ region: AWS_REGION });
 
 export const handler = async (event, context) => {
-    console.log('event = %s', JSON.stringify(event, null, 2));
-    console.log('context = %s', JSON.stringify(context, null, 2));
+    console.log('event = %o', event);
+    console.log('context = %o', context);
 
     const putLifecycleEventHookExecutionStatusCommand = new PutLifecycleEventHookExecutionStatusCommand({
         deploymentId: event.DeploymentId,
@@ -14,9 +14,11 @@ export const handler = async (event, context) => {
         status: await isTestSuccessful() ? 'Succeeded' : 'Failed'
     });
 
-    console.log('putLifecycleEventHookExecutionStatusCommand = %s', JSON.stringify(putLifecycleEventHookExecutionStatusCommand, null, 2));
+    console.log('putLifecycleEventHookExecutionStatusCommand = %o', putLifecycleEventHookExecutionStatusCommand);
 
-    await codedeploy.send(putLifecycleEventHookExecutionStatusCommand)
+    const putLifecycleEventHookExecutionStatusResponse = await codedeploy.send(putLifecycleEventHookExecutionStatusCommand);
+
+    console.log('putLifecycleEventHookExecutionStatusResponse = %o', putLifecycleEventHookExecutionStatusResponse);
 };
 
 async function isTestSuccessful() {
