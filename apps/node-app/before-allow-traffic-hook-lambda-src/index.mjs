@@ -1,8 +1,10 @@
 import { CodeDeployClient, PutLifecycleEventHookExecutionStatusCommand } from '@aws-sdk/client-codedeploy';
 
-const { AWS_REGION } = process.env;
+const { AWS_REGION, APPLICATION_URL } = process.env;
 
 const codedeploy = new CodeDeployClient({ region: AWS_REGION });
+
+console.log('APPLICATION_URL = %s', APPLICATION_URL);
 
 export const handler = async (event, context) => {
     console.log('event = %o', event);
@@ -11,6 +13,7 @@ export const handler = async (event, context) => {
     const putLifecycleEventHookExecutionStatusCommand = new PutLifecycleEventHookExecutionStatusCommand({
         deploymentId: event.DeploymentId,
         lifecycleEventHookExecutionId: event.LifecycleEventHookExecutionId,
+        // "Pending" || "InProgress" || "Succeeded" || "Failed" || "Skipped" || "Unknown"
         status: await isTestSuccessful() ? 'Succeeded' : 'Failed'
     });
 
@@ -23,7 +26,7 @@ export const handler = async (event, context) => {
 
 async function isTestSuccessful() {
     try {
-        const testResponse = await fetch('http://my-lb-ingress-1855827051.us-east-1.elb.amazonaws.com:8080/node-app');
+        const testResponse = await fetch(APPLICATION_URL);
         console.log('testResponse = %o', testResponse);
 
         return testResponse.status === 200;

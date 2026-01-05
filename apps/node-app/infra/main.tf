@@ -46,9 +46,9 @@ module "before_allow_traffic_lambda_hook" {
     "../before-allow-traffic-hook-lambda-src/index.mjs",
   ]
 
-  # environment_variables = {
-  #   "X" = "Y"
-  # }
+  environment_variables = {
+    "APPLICATION_URL" = "http://${module.infra.lb_ingress_dns_name}:${module.infra.lb_ingress_listener_test_port}/node-app"
+  }
 
   attach_policy_json = true
   policy_json        = data.aws_iam_policy_document.before_allow_traffic_lambda_hook.json
