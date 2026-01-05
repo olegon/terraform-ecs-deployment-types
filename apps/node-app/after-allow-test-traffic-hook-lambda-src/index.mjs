@@ -10,6 +10,8 @@ export const handler = async (event, context) => {
     console.log('event = %o', event);
     console.log('context = %o', context);
 
+    await debugApplicationVersion();
+
     const putLifecycleEventHookExecutionStatusCommand = new PutLifecycleEventHookExecutionStatusCommand({
         deploymentId: event.DeploymentId,
         lifecycleEventHookExecutionId: event.LifecycleEventHookExecutionId,
@@ -39,5 +41,19 @@ async function isTestSuccessful() {
         console.error('error = %o', error);
 
         return false;
+    }
+}
+
+async function debugApplicationVersion() {
+    try {
+        const applicationVersionResponse = await fetch(`http://${APPLICATION_URL}/v1/version`);
+        console.log('applicationVersionResponse = %o', applicationVersionResponse);
+
+        if (applicationVersionResponse.headers.get('content-length') != '0') {
+            const applicationVersionResponseBody = await applicationVersionResponse.text();
+            console.log('applicationVersionResponseBody = %s', applicationVersionResponseBody);
+        }
+    } catch (error) {
+        console.error('error = %o', error);
     }
 }
