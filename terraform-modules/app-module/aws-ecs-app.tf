@@ -57,7 +57,7 @@ resource "aws_ecs_service" "app" {
 
   deployment_controller {
     # Changing it will recreate the ECS Service
-    type = var.deployment_type == "Blue Green" ? "CODE_DEPLOY" : "ECS"
+    type = local.is_managed_by_code_deploy ? "CODE_DEPLOY" : "ECS"
   }
 
   network_configuration {

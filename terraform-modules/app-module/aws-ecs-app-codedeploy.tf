@@ -29,7 +29,7 @@ resource "aws_codedeploy_app" "app" {
 resource "aws_codedeploy_deployment_group" "app" {
   # It will throw an error if Rolling Update Deployment is active and a I try to create it
   # because this configurion only works with Blue Green. This is configured on aws_ecs_service.deployment_controller
-  count = var.deployment_type == "Blue Green" ? 1 : 0
+  count = local.is_managed_by_code_deploy ? 1 : 0
 
   app_name               = aws_codedeploy_app.app.name
   deployment_config_name = var.deployment_bluegreen_strategy

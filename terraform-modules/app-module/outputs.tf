@@ -1,5 +1,5 @@
 output "aws_codedeploy_deployment_group_arn" {
-  value = var.deployment_type == "Blue Green" ? aws_codedeploy_deployment_group.app[0].arn : null
+  value = local.is_managed_by_code_deploy ? aws_codedeploy_deployment_group.app[0].arn : null
 }
 
 output "lb_ingress_dns_name" {
