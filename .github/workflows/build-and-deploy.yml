@@ -73,7 +73,7 @@ jobs:
       ecr-repository-name: node-app
       ecs-cluster-name: my-ecs-cluster
       ecs-service-name: node-app
-      codedeploy_lambda_hook_arn: arn:aws:lambda:us-east-1:105029661252:function:node-app-code-deploy-before-allow-traffic-lambda-hook
+      codedeploy_after_allow_test_traffic_hook_lambda_arn: arn:aws:lambda:us-east-1:105029661252:function:node-app-code-deploy-after-allow-test-traffic-hook
     secrets: inherit
 
   spring-app-terraform:

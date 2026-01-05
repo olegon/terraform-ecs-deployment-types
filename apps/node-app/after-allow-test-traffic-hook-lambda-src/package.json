@@ -1,5 +1,5 @@
 {
-  "name": "before-allow-traffic-hook-lambda-src",
+  "name": "after-allow-test-traffic-hook-lambda-src",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",

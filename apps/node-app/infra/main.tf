@@ -30,11 +30,11 @@ module "infra" {
   deployment_type               = "Blue Green"
 }
 
-module "before_allow_traffic_lambda_hook" {
+module "after_allow_test_traffic_lambda_hook" {
   source  = "terraform-aws-modules/lambda/aws"
   version = ">= 8, < 9"
 
-  function_name = "node-app-code-deploy-before-allow-traffic-lambda-hook"
+  function_name = "node-app-code-deploy-after-allow-test-traffic-hook"
   handler       = "index.handler"
   runtime       = "nodejs24.x"
   publish       = true
@@ -43,7 +43,7 @@ module "before_allow_traffic_lambda_hook" {
   memory_size = 128
 
   source_path = [
-    "../before-allow-traffic-hook-lambda-src/index.mjs",
+    "../after-allow-test-traffic-hook-lambda-src/index.mjs",
   ]
 
   environment_variables = {

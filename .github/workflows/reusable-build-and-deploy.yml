@@ -38,7 +38,7 @@ on:
         required: false
         type: string
         default: task-definition.json
-      codedeploy_lambda_hook_arn:
+      codedeploy_after_allow_test_traffic_hook_lambda_arn:
         required: false
         type: string
     secrets:
@@ -51,6 +51,7 @@ env:
   ECR_REPOSITORY_NAME: ${{ inputs.ecr-repository-name }}
   ECS_SERVICE_NAME: ${{ inputs.ecs-service-name }}
   ECS_TASK_DEFINITION_FILE: ${{ inputs.ecs-task-definition-file }}
+  CODEDEPLOY_AFTER_ALLOW_TEST_TRAFFIC_HOOK_LAMBDA_ARN: ${{ inputs.codedeploy_after_allow_test_traffic_hook_lambda_arn }}
 
 jobs:
   app-build-and-publish:
@@ -122,7 +123,7 @@ jobs:
         id: create-appspec-file-with-hooks
         run: |
           # Hooks docs: https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-hooks.html
-          echo '{ "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ], "Hooks": [ { "AfterAllowTestTraffic": "arn:aws:lambda:us-east-1:105029661252:function:node-app-code-deploy-before-allow-traffic-lambda-hook" } ] }' | envsubst > appspec.json
+          echo '{ "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ], "Hooks": [ { "AfterAllowTestTraffic": "$CODEDEPLOY_AFTER_ALLOW_TEST_TRAFFIC_HOOK_LAMBDA_ARN" } ] }' | envsubst > appspec.json
           cat appspec.json
 
       - name: Deploy Amazon ECS task definition
