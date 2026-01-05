@@ -29,6 +29,11 @@ async function isTestSuccessful() {
         const testResponse = await fetch(APPLICATION_URL);
         console.log('testResponse = %o', testResponse);
 
+        if (testResponse.headers.get('content-length') != '0') {
+            const testResponseBody = await testResponse.text();
+            console.log('testResponseBody = %s', testResponseBody);
+        }
+
         return testResponse.status === 200;
     } catch (error) {
         console.error('error = %o', error);
