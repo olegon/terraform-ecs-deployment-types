@@ -46,7 +46,7 @@ async function isTestSuccessful() {
 
 async function debugApplicationVersion() {
     try {
-        const applicationVersionResponse = await fetch(`http://${APPLICATION_URL}/v1/version`);
+        const applicationVersionResponse = await fetch(`${APPLICATION_URL}/v1/version`);
         console.log('applicationVersionResponse = %o', applicationVersionResponse);
 
         if (applicationVersionResponse.headers.get('content-length') != '0') {
