@@ -112,14 +112,14 @@ jobs:
           cat "$TASK_DEFINITION_PATH"
 
       - name: Create appspec file without hooks
-        if: ${{ inputs.codedeploy_lambda_hook_arn == '' }}
+        if: ${{ inputs.codedeploy_after_allow_test_traffic_hook_lambda_arn == '' }}
         id: create-appspec-file-without-hooks
         run: |
           echo '{ "Resources": [ { "TargetService": { "Type": "AWS::ECS::Service", "Properties": { "TaskDefinition": "ARN_WILL_BE_FILLED_ON_CICD_PIPELINE", "LoadBalancerInfo": { "ContainerName": "$CONTAINER_NAME", "ContainerPort": "$CONTAINER_PORT" } } } } ] }' | envsubst > appspec.json
           cat appspec.json
 
       - name: Create appspec file with hooks
-        if: ${{ inputs.codedeploy_lambda_hook_arn != '' }}
+        if: ${{ inputs.codedeploy_after_allow_test_traffic_hook_lambda_arn != '' }}
         id: create-appspec-file-with-hooks
         run: |
           # Hooks docs: https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-hooks.html
