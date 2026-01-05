@@ -1,7 +1,9 @@
 import express from 'express';
 import config from './package.json' with { type: "json" };
 
-const PORT = process.env.PORT ?? 5000;
+const PORT = 'PORT' in process.env 
+    ? 5000
+    : parseInt(process.env.PORT, 10);
 
 const router = express.Router();
 router.get('/', (_, res) => res.send('Hello! :)'));
