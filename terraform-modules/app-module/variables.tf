@@ -33,8 +33,8 @@ variable "deployment_bluegreen_strategy" {
   default = "CodeDeployDefault.ECSAllAtOnce"
   validation {
     // Sad to see all this configuration duplication...
-    condition     = contains(["CodeDeployDefault.ECSAllAtOnce", "CodeDeployDefault.ECSCanary10percent15Minutes", "CodeDeployDefault.ECSCanary10percent5Minutes", "CodeDeployDefault.ECSLinear10PercentEvery3Minutes", "CodeDeployDefault.ECSLinear10PercentEvery1Minutes"], var.deployment_bluegreen_strategy)
-    error_message = format("Valid deployment_bluegreen_strategy values are: %s", join(", ", ["CodeDeployDefault.ECSAllAtOnce", "CodeDeployDefault.ECSCanary10percent15Minutes", "CodeDeployDefault.ECSCanary10percent5Minutes", "CodeDeployDefault.ECSLinear10PercentEvery3Minutes", "CodeDeployDefault.ECSLinear10PercentEvery1Minutes"]))
+    condition     = contains(["CodeDeployDefault.ECSAllAtOnce", "CodeDeployDefault.ECSCanary10Percent15Minutes", "CodeDeployDefault.ECSCanary10Percent5Minutes", "CodeDeployDefault.ECSLinear10PercentEvery3Minutes", "CodeDeployDefault.ECSLinear10PercentEvery1Minutes"], var.deployment_bluegreen_strategy)
+    error_message = format("Valid deployment_bluegreen_strategy values are: %s", join(", ", ["CodeDeployDefault.ECSAllAtOnce", "CodeDeployDefault.ECSCanary10Percent15Minutes", "CodeDeployDefault.ECSCanary10Percent5Minutes", "CodeDeployDefault.ECSLinear10PercentEvery3Minutes", "CodeDeployDefault.ECSLinear10PercentEvery1Minutes"]))
   }
 }
 
