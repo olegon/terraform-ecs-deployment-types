@@ -27,7 +27,7 @@ module "infra" {
   ecs_service_desired_count = 2
 
   # deployment_bluegreen_strategy = "CodeDeployDefault.ECSAllAtOnce"
-  deployment_bluegreen_strategy = "CodeDeployDefault.ECSCanary10percent5Minutes"
+  deployment_bluegreen_strategy = "CodeDeployDefault.ECSCanary10Percent5Minutes"
   deployment_type               = "Blue Green"
 }
 
