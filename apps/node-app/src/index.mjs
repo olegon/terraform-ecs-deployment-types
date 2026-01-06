@@ -6,7 +6,7 @@ const PORT = 'PORT' in process.env
     : parseInt(process.env.PORT, 10);
 
 const router = express.Router();
-router.get('/', (_, res) => res.send('Hello! :)'));
+router.get('/', (_, res) => res.send('Hello! :D'));
 // router.get('/', (_, res) => res.status(500).send('Planned failure... :)'));
 router.get('/v1/health', (_, res) => res.send('Healthy!'));
 router.get('/v1/version', (_, res) => res.send(config.version));
