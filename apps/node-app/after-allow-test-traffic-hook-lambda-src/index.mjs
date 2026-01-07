@@ -4,20 +4,22 @@ const { AWS_REGION, TEST_APPLICATION_URL, PRODUCTION_APPLICATION_URL } = process
 
 const codedeploy = new CodeDeployClient({ region: AWS_REGION });
 
-console.log('TEST_APPLICATION_URL = %s', TEST_APPLICATION_URL);
-console.log('PRODUCTION_APPLICATION_URL = %s', PRODUCTION_APPLICATION_URL);
+console.log('process.env = %o', process.env);
 
 export const handler = async (event, context) => {
     console.log('event = %o', event);
     console.log('context = %o', context);
 
+    // Introcuding delay because test application url was receiving requests too early... :(
+    await sleep(30_000);
+
     await debugApplicationVersion(TEST_APPLICATION_URL);
     const isTestUrlOk = await isTestSuccessful(TEST_APPLICATION_URL);
     console.log('isTestUrlOk = %o', isTestUrlOk);
 
-    await debugApplicationVersion(PRODUCTION_APPLICATION_URL);
-    const isProductionUrlOk = await isTestSuccessful(PRODUCTION_APPLICATION_URL);
-    console.log('isProductionUrlOk = %o', isProductionUrlOk);
+    // await debugApplicationVersion(PRODUCTION_APPLICATION_URL);
+    // const isProductionUrlOk = await isTestSuccessful(PRODUCTION_APPLICATION_URL);
+    // console.log('isProductionUrlOk = %o', isProductionUrlOk);
 
     const putLifecycleEventHookExecutionStatusCommand = new PutLifecycleEventHookExecutionStatusCommand({
         deploymentId: event.DeploymentId,
@@ -67,4 +69,8 @@ async function debugApplicationVersion(applicationUrl) {
     } catch (error) {
         console.error('error = %o', error);
     }
+}
+
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
