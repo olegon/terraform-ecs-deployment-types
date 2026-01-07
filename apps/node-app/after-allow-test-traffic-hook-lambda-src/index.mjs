@@ -1,22 +1,29 @@
 import { CodeDeployClient, PutLifecycleEventHookExecutionStatusCommand } from '@aws-sdk/client-codedeploy';
 
-const { AWS_REGION, APPLICATION_URL } = process.env;
+const { AWS_REGION, TEST_APPLICATION_URL, PRODUCTION_APPLICATION_URL } = process.env;
 
 const codedeploy = new CodeDeployClient({ region: AWS_REGION });
 
-console.log('APPLICATION_URL = %s', APPLICATION_URL);
+console.log('TEST_APPLICATION_URL = %s', TEST_APPLICATION_URL);
+console.log('PRODUCTION_APPLICATION_URL = %s', PRODUCTION_APPLICATION_URL);
 
 export const handler = async (event, context) => {
     console.log('event = %o', event);
     console.log('context = %o', context);
 
-    await debugApplicationVersion();
+    await debugApplicationVersion(TEST_APPLICATION_URL);
+    const isTestUrlOk = await isTestSuccessful(TEST_APPLICATION_URL);
+    console.log('isTestUrlOk = %o', isTestUrlOk);
+
+    await debugApplicationVersion(PRODUCTION_APPLICATION_URL);
+    const isProductionUrlOk = await isTestSuccessful(PRODUCTION_APPLICATION_URL);
+    console.log('isProductionUrlOk = %o', isProductionUrlOk);
 
     const putLifecycleEventHookExecutionStatusCommand = new PutLifecycleEventHookExecutionStatusCommand({
         deploymentId: event.DeploymentId,
         lifecycleEventHookExecutionId: event.LifecycleEventHookExecutionId,
         // "Pending" || "InProgress" || "Succeeded" || "Failed" || "Skipped" || "Unknown"
-        status: await isTestSuccessful() ? 'Succeeded' : 'Failed'
+        status: isTestUrlOk ? 'Succeeded' : 'Failed'
     });
 
     console.log('putLifecycleEventHookExecutionStatusCommand = %o', putLifecycleEventHookExecutionStatusCommand);
@@ -26,9 +33,11 @@ export const handler = async (event, context) => {
     console.log('putLifecycleEventHookExecutionStatusResponse = %o', putLifecycleEventHookExecutionStatusResponse);
 };
 
-async function isTestSuccessful() {
+async function isTestSuccessful(applicationUrl) {
     try {
-        const testResponse = await fetch(APPLICATION_URL);
+        console.log('applicationUrl = %s', applicationUrl);
+
+        const testResponse = await fetch(applicationUrl);
         console.log('testResponse = %o', testResponse);
 
         if (testResponse.headers.get('content-length') != '0') {
@@ -44,9 +53,11 @@ async function isTestSuccessful() {
     }
 }
 
-async function debugApplicationVersion() {
+async function debugApplicationVersion(applicationUrl) {
     try {
-        const applicationVersionResponse = await fetch(`${APPLICATION_URL}/v1/version`);
+        console.log('applicationUrl = %s', applicationUrl);
+
+        const applicationVersionResponse = await fetch(`${applicationUrl}/v1/version`);
         console.log('applicationVersionResponse = %o', applicationVersionResponse);
 
         if (applicationVersionResponse.headers.get('content-length') != '0') {

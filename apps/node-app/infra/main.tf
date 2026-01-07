@@ -48,7 +48,8 @@ module "after_allow_test_traffic_lambda_hook" {
   ]
 
   environment_variables = {
-    "APPLICATION_URL" = "http://${module.infra.lb_ingress_dns_name}:${module.infra.lb_ingress_listener_test_port}/node-app"
+    "TEST_APPLICATION_URL" = "http://${module.infra.lb_ingress_dns_name}:${module.infra.lb_ingress_listener_test_port}/node-app"
+    "PRODUCTION_APPLICATION_URL" = "http://${module.infra.lb_ingress_dns_name}:${module.infra.lb_ingress_listener_prod_port}/node-app"
   }
 
   attach_policy_json = true
