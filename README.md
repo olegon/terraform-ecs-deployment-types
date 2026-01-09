@@ -9,6 +9,7 @@
   - [1.2. Blue Green](#12-blue-green)
 - [2. How it really works?](#2-how-it-really-works)
 - [Update 1 - CodeDeploy Hooks (Lambda) — AfterAllowTestTraffic ✅](#update-1---codedeploy-hooks-lambda--afterallowtesttraffic-)
+  - [🚨 Be caraful 🚨](#-be-caraful-)
 
 ## 1. Deployment types
 
@@ -77,3 +78,9 @@ I recommend to see every file because I added comments that shows the mistakes I
 In recent commits, I explored adding a Lambda hook to run tests during the CodeDeploy process. I created the Lambda `after-allow-test-traffic-hook`, which is triggered by the `AfterAllowTestTraffic` hook. It performs tests (for example, HTTP checks against the new task set) and, if any test fails, the deployment is aborted; otherwise the deployment continues.
 
 This integration is automated in CI/CD with GitHub Workflows: the reusable workflow `.github/workflows/reusable-build-and-deploy.yml` accepts the input `codedeploy_after_allow_test_traffic_hook_lambda_arn` and, when provided, generates the `appspec.json` with the `AfterAllowTestTraffic` hook so CodeDeploy will invoke the Lambda during the deployment.
+
+### 🚨 Be caraful 🚨
+
+The strangest behavior is that `after-allow-test-traffic-hook` Lambda needs a 30 seconds sleep. Without it, test listener stills traffics to the old replica set. I`ve found this on [Reddit](https://www.reddit.com/r/aws/comments/cnho8x/ecs_bluegreen_deployment_hooks_cant_access):
+
+> According to AWS support, it takes 10-12 seconds for ALB to actually switch test listener to send test traffic to replacement task set. It means AfterAllowTestTraffic event is triggered 10-12 seconds before test traffic is routed to replacement task set. Be aware.
