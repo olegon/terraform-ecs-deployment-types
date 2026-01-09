@@ -8,6 +8,7 @@
   - [1.1. Rolling Update](#11-rolling-update)
   - [1.2. Blue Green](#12-blue-green)
 - [2. How it really works?](#2-how-it-really-works)
+- [Update 1 - CodeDeploy Hooks (Lambda) — AfterAllowTestTraffic ✅](#update-1---codedeploy-hooks-lambda--afterallowtesttraffic-)
 
 ## 1. Deployment types
 
@@ -70,3 +71,9 @@ I've created a simple application and a simple platform to study it, so you will
 - **.github**: has Github Actions code that deploys all these items to an AWS account;
 
 I recommend to see every file because I added comments that shows the mistakes I've made.
+
+## Update 1 - CodeDeploy Hooks (Lambda) — AfterAllowTestTraffic ✅
+
+In recent commits, I explored adding a Lambda hook to run tests during the CodeDeploy process. I created the Lambda `after-allow-test-traffic-hook`, which is triggered by the `AfterAllowTestTraffic` hook. It performs tests (for example, HTTP checks against the new task set) and, if any test fails, the deployment is aborted; otherwise the deployment continues.
+
+This integration is automated in CI/CD with GitHub Workflows: the reusable workflow `.github/workflows/reusable-build-and-deploy.yml` accepts the input `codedeploy_after_allow_test_traffic_hook_lambda_arn` and, when provided, generates the `appspec.json` with the `AfterAllowTestTraffic` hook so CodeDeploy will invoke the Lambda during the deployment.
