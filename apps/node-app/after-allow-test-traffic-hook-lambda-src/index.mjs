@@ -10,7 +10,7 @@ export const handler = async (event, context) => {
     console.log('event = %o', event);
     console.log('context = %o', context);
 
-    // Introcuding delay because test application url was receiving requests too early... :(
+    // Adding a delay because testApplicationUrl was pointing to old version right after deployment.
     await sleep(30_000);
 
     await debugApplicationVersion(TEST_APPLICATION_URL);
